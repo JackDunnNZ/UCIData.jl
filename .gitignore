@@ -1,5 +1,7 @@
 datafiles/*/*.orig
 
+processed/
+
 # Created by https://www.gitignore.io
 
 ### OSX ###
