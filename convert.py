@@ -54,8 +54,8 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
   categoric_counts = [0 for _ in dataset_value_indices]
   categoric_set = frozenset(dataset_categoric_indices)
 
-  max_val = [-1e10] * len(dataset_value_indices)
-  min_val = [1e10] * len(dataset_value_indices)
+  max_val = [-1e10] * len(lines[0])
+  min_val = [1e10] * len(lines[0])
 
   row_values = []
   row_classes = []
@@ -96,10 +96,11 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
         except:
           val = float(val.replace(',', '.'))
           lines[i][dataset_value_indices[j]] = val
-        if max_val[j] < val:
-          max_val[j] = val
-        if min_val[j] > val:
-          min_val[j] = val
+        index = dataset_value_indices[j]
+        if max_val[index] < val:
+          max_val[index] = val
+        if min_val[index] > val:
+          min_val[index] = val
 
   # Class size zero means include all classes in one file
   num_classes = class_count if class_size == 0 else class_size
