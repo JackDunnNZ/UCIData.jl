@@ -14,6 +14,7 @@ def process_dir(data_path, processed_path, normalise=True):
   if not os.path.exists(config_path):
     return
 
+  # Read config file
   parser = SafeConfigParser()
   parser.read(config_path)
 
@@ -38,12 +39,13 @@ def process_dir(data_path, processed_path, normalise=True):
   if not os.path.exists(dataset_path):
     urllib.urlretrieve(dataset_url, dataset_path)
 
+  # Read dataset file
   f_in = open(dataset_path, 'rU')
   lines = f_in.read().decode(dataset_encoding)
   lines = [line for line in lines.splitlines() if line]
+  # Skip specified number of header lines
   lines = lines[dataset_header_lines:]
   f_in.close()
-
 
   classes = {}
   class_count = 0
@@ -59,31 +61,36 @@ def process_dir(data_path, processed_path, normalise=True):
   row_classes = []
   row_ids = []
 
-
   for i, line in enumerate(lines):
     if dataset_separator:
-      lines[i] = line.strip('\n').split(dataset_separator)
+      lines[i] = line.split(dataset_separator)
     else:
-      lines[i] = line.strip('\n').split()
+      lines[i] = line.split()
 
+    # Count and number the classes
     row_class = lines[i][dataset_class_index]
     if row_class not in classes:
       classes[row_class] = class_count
       class_count += 1
     row_classes.append(classes[row_class])
 
+    # Construct id for each row
     if dataset_id_indices:
       row_ids.append('_'.join([lines[i][j] for j in dataset_id_indices]))
     else:
       row_ids.append('id_%i' % i)
-    v = [lines[i][j] for j in dataset_value_indices]
 
+    # Process values
+    v = [lines[i][j] for j in dataset_value_indices]
     for j, val in enumerate(v):
+      # Count categoric values
       if dataset_value_indices[j] in categoric_set:
         if val not in categoric_classes[j]:
           categoric_classes[j][val] = categoric_counts[j]
           categoric_counts[j] += 1
+      # Find min/max for numeric values
       else:
+        # Catch error when number is formatted with ',' as decimal separator
         try:
           val = float(val)
         except:
@@ -97,9 +104,13 @@ def process_dir(data_path, processed_path, normalise=True):
   for line in lines:
     new_values = []
     for j in dataset_value_indices:
+      # Convert n categorical to n-1 dummy vars
       if j in dataset_categoric_indices:
-        # convert n categorical to n-1 dummy vars
+        # Construct array of n-1 zeros
         categoric = [0] * (categoric_counts[j] - 1)
+        # Find the index, i, of the current categoric value, and set the (i-1)th
+        # entry of the array to 1. We treat the 1st categoric value as the zero
+        # vector.
         cur_index = categoric_classes[j][line[j]] - 1
         if cur_index >= 0:
           categoric[cur_index] = 1
