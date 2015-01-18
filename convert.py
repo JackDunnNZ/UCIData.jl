@@ -153,10 +153,12 @@ def main(normalise=False):
   if not os.path.exists(processed_path):
     os.makedirs(processed_path)
 
+  # Process everything in datafiles folder
   for dir in os.listdir(datafiles_path):
-    if os.path.isdir(dir):
-      continue
     data_path = os.path.join(datafiles_path, dir)
+    # Skip any paths that aren't folders
+    if not os.path.isdir(data_path):
+      continue
     process_dir(data_path, processed_path, normalise)
 
 if __name__ == '__main__':
