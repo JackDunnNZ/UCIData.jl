@@ -124,6 +124,7 @@ def process_dir(data_path, processed_path, normalise=True):
           new_values.append(line[j])
     row_values.append(new_values)
 
+  # Create an output file handle for every combination of classes we want
   f = []
   sorted_classes = sorted(classes.values())
   for i, j in combinations(sorted_classes, 2):
@@ -131,18 +132,20 @@ def process_dir(data_path, processed_path, normalise=True):
     f.append(open(os.path.join(processed_path, outname), 'w'))
 
   for i, line in enumerate(lines):
+    # Create output row
     row_class = row_classes[i]
     row_id = row_ids[i]
     out_string = ','.join([row_id] + map(str, row_values[i])) + ','
 
+    # Output to the files for which this is part of the combination
     for i, comb in enumerate(combinations(sorted_classes, 2)):
       if row_class in comb:
-        row_class_new = 0 if row_class == comb[0] else 1
+        row_class_new = comb.index(row_class)
         f[i].write(out_string + str(row_class_new) + '\n')
-
 
   for f_out in f:
     f_out.close()
+
 
 def main(normalise=False):
 
