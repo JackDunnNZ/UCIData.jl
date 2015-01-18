@@ -192,6 +192,7 @@ def main(normalise=False, class_size=0):
     # Skip any paths that aren't folders
     if not os.path.isdir(data_path):
       continue
+    print 'Processing %s' % dir
     process_dir(data_path, processed_path, normalise, class_size)
 
 if __name__ == '__main__':
