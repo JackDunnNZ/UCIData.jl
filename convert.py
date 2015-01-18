@@ -61,6 +61,8 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
   row_classes = []
   row_ids = []
 
+  missing_rows = set()
+
   for i, line in enumerate(lines):
     if dataset_separator:
       lines[i] = line.split(dataset_separator)
@@ -82,7 +84,13 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
     row_ids.append('id_%s' % row_id)
 
     # Process values
-    v = [lines[i][j] for j in dataset_value_indices]
+    v = []
+    for j in dataset_value_indices:
+      if lines[i][j] == '?':
+        missing_rows.add(i)
+        continue
+      v.append(lines[i][j])
+
     for j, val in enumerate(v):
       # Count categoric values
       if dataset_value_indices[j] in categoric_set:
@@ -111,7 +119,12 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
     # We exit instead
     return
 
-  for line in lines:
+  for i, line in enumerate(lines):
+    # Skip missing data rows
+    if i in missing_rows:
+      row_values.append([])
+      continue
+
     new_values = []
     for j in dataset_value_indices:
       # Convert n categorical to n-1 dummy vars
@@ -143,16 +156,20 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
     f.append(open(os.path.join(processed_path, outname), 'w'))
 
   for i, line in enumerate(lines):
+    # Skip missing row
+    if i in missing_rows:
+      continue
+
     # Create output row
     row_class = row_classes[i]
     row_id = row_ids[i]
     out_string = ','.join([row_id] + map(str, row_values[i])) + ','
 
     # Output to the files for which this is part of the combination
-    for i, comb in enumerate(combinations(sorted_classes, num_classes)):
+    for k, comb in enumerate(combinations(sorted_classes, num_classes)):
       if row_class in comb:
         row_class_new = comb.index(row_class)
-        f[i].write(out_string + str(row_class_new) + '\n')
+        f[k].write(out_string + str(row_class_new) + '\n')
 
   for f_out in f:
     f_out.close()
