@@ -19,7 +19,7 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
   parser.read(config_path)
 
   dataset_name = parser.get('info', 'name')
-  dataset_url = parser.get('info', 'url')
+  dataset_data_url = parser.get('info', 'data_url')
   dataset_class_index = parser.getint('info', 'class_index')
   dataset_id_indices = parser.get('info', 'id_indices')
   dataset_value_indices = parser.get('info', 'value_indices')
@@ -37,7 +37,7 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
 
   # Download the dataset if we don't have it already
   if not os.path.exists(dataset_path):
-    urllib.urlretrieve(dataset_url, dataset_path)
+    urllib.urlretrieve(dataset_data_url, dataset_path)
 
   # Read dataset file
   f_in = open(dataset_path, 'rU')
