@@ -125,7 +125,8 @@ def process_dir(data_path, processed_path, normalise=True):
     row_values.append(new_values)
 
   f = []
-  for i, j in combinations(classes.itervalues(), 2):
+  sorted_classes = sorted(classes.values())
+  for i, j in combinations(sorted_classes, 2):
     outname = '%s.%s' % (dataset_name, str(i) + '.' + str(j))
     f.append(open(os.path.join(processed_path, outname), 'w'))
 
@@ -134,7 +135,7 @@ def process_dir(data_path, processed_path, normalise=True):
     row_id = row_ids[i]
     out_string = ','.join([row_id] + map(str, row_values[i])) + ','
 
-    for i, comb in enumerate(combinations(classes.itervalues(), 2)):
+    for i, comb in enumerate(combinations(sorted_classes, 2)):
       if row_class in comb:
         row_class_new = 0 if row_class == comb[0] else 1
         f[i].write(out_string + str(row_class_new) + '\n')
