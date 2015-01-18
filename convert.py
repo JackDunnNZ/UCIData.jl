@@ -76,9 +76,10 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
 
     # Construct id for each row
     if dataset_id_indices:
-      row_ids.append('_'.join([lines[i][j] for j in dataset_id_indices]))
+      row_id = '_'.join([lines[i][j] for j in dataset_id_indices])
     else:
-      row_ids.append('id_%i' % (i + 1))
+      row_id = str(i + 1)
+    row_ids.append('id_%s' % row_id)
 
     # Process values
     v = [lines[i][j] for j in dataset_value_indices]
