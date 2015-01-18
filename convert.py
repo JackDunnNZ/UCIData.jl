@@ -9,7 +9,7 @@ import urllib
 def convert_list(indices):
   return map(int, indices.split(',')) if indices else []
 
-def process_dir(data_path, processed_path, normalise=True):
+def process_dir(data_path, processed_path, normalise=True, class_size=0):
   config_path = os.path.join(data_path, 'config.ini')
   if not os.path.exists(config_path):
     return
@@ -101,6 +101,14 @@ def process_dir(data_path, processed_path, normalise=True):
         if min_val[j] > val:
           min_val[j] = val
 
+  # Class size zero means include all classes in one file
+  num_classes = class_count if class_size == 0 else class_size
+
+  if num_classes > class_count:
+    # There are too few classes in this dataset to process the correct number
+    # We exit instead
+    return
+
   for line in lines:
     new_values = []
     for j in dataset_value_indices:
@@ -127,8 +135,9 @@ def process_dir(data_path, processed_path, normalise=True):
   # Create an output file handle for every combination of classes we want
   f = []
   sorted_classes = sorted(classes.values())
-  for i, j in combinations(sorted_classes, 2):
-    outname = '%s.%s' % (dataset_name, str(i) + '.' + str(j))
+  for comb in combinations(sorted_classes, num_classes):
+    comb_name = 'all' if class_size == 0 else '.'.join(map(str, comb))
+    outname = '%s.%s' % (dataset_name, comb_name)
     f.append(open(os.path.join(processed_path, outname), 'w'))
 
   for i, line in enumerate(lines):
@@ -138,7 +147,7 @@ def process_dir(data_path, processed_path, normalise=True):
     out_string = ','.join([row_id] + map(str, row_values[i])) + ','
 
     # Output to the files for which this is part of the combination
-    for i, comb in enumerate(combinations(sorted_classes, 2)):
+    for i, comb in enumerate(combinations(sorted_classes, num_classes)):
       if row_class in comb:
         row_class_new = comb.index(row_class)
         f[i].write(out_string + str(row_class_new) + '\n')
@@ -147,12 +156,14 @@ def process_dir(data_path, processed_path, normalise=True):
     f_out.close()
 
 
-def main(normalise=False):
+def main(normalise=False, class_size=0):
 
   root_path = os.path.dirname(__file__)
   datafiles_path = os.path.join(root_path, 'datafiles')
 
-  processed_path = os.path.abspath(os.path.join(root_path, 'processed'))
+  class_size_name = 'all' if class_size == 0 else str(class_size)
+  processed_path = os.path.abspath(os.path.join(root_path, 'processed',
+                                                class_size_name))
   if not os.path.exists(processed_path):
     os.makedirs(processed_path)
 
@@ -162,15 +173,17 @@ def main(normalise=False):
     # Skip any paths that aren't folders
     if not os.path.isdir(data_path):
       continue
-    process_dir(data_path, processed_path, normalise)
+    process_dir(data_path, processed_path, normalise, class_size)
 
 if __name__ == '__main__':
   import argparse
 
   parser = argparse.ArgumentParser(description='Process datafiles.')
   parser.add_argument('-n', '--normalise', action='store_true')
+  parser.add_argument('-c', '--classes', type=int, default=0)
 
   args = parser.parse_args()
   normalise = args.normalise
+  class_size = args.classes
 
-  main(normalise)
+  main(normalise, class_size)
