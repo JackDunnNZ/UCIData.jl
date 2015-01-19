@@ -54,8 +54,8 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
   categoric_counts = [0 for _ in dataset_value_indices]
   categoric_set = frozenset(dataset_categoric_indices)
 
-  max_val = [-1e10] * len(lines[0])
-  min_val = [1e10] * len(lines[0])
+  max_val = [-1e10] * len(dataset_value_indices)
+  min_val = [1e10] * len(dataset_value_indices)
 
   row_values = []
   row_classes = []
@@ -85,31 +85,33 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
 
     # Process values
     v = []
+    skip_row = False
     for j in dataset_value_indices:
       if lines[i][j] == '?':
         missing_rows.add(i)
-        continue
+        skip_row = True
+        break
       v.append(lines[i][j])
 
-    for j, val in enumerate(v):
-      # Count categoric values
-      if dataset_value_indices[j] in categoric_set:
-        if val not in categoric_classes[j]:
-          categoric_classes[j][val] = categoric_counts[j]
-          categoric_counts[j] += 1
-      # Find min/max for numeric values
-      else:
-        # Catch error when number is formatted with ',' as decimal separator
-        try:
-          val = float(val)
-        except:
-          val = float(val.replace(',', '.'))
-          lines[i][dataset_value_indices[j]] = val
-        index = dataset_value_indices[j]
-        if max_val[index] < val:
-          max_val[index] = val
-        if min_val[index] > val:
-          min_val[index] = val
+    if not skip_row:
+      for j, val in enumerate(v):
+        # Count categoric values
+        if dataset_value_indices[j] in categoric_set:
+          if val not in categoric_classes[j]:
+            categoric_classes[j][val] = categoric_counts[j]
+            categoric_counts[j] += 1
+        # Find min/max for numeric values
+        else:
+          # Catch error when number is formatted with ',' as decimal separator
+          try:
+            val = float(val)
+          except:
+            val = float(val.replace(',', '.'))
+            lines[i][dataset_value_indices[j]] = val
+          if max_val[j] < val:
+            max_val[j] = val
+          if min_val[j] > val:
+            min_val[j] = val
 
   # Class size zero means include all classes in one file
   num_classes = class_count if class_size == 0 else class_size
@@ -126,7 +128,7 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
       continue
 
     new_values = []
-    for j in dataset_value_indices:
+    for k, j in enumerate(dataset_value_indices):
       # Convert n categorical to n-1 dummy vars
       if j in dataset_categoric_indices:
         # Construct array of n-1 zeros
@@ -141,8 +143,8 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
 
       else:
         if normalise:
-          new_values.append(str((float(line[j]) - min_val[j]) /
-                                float(max_val[j]  - min_val[j])))
+          new_values.append(str((float(line[j]) - min_val[k]) /
+                                float(max_val[k]  - min_val[k])))
         else:
           new_values.append(line[j])
     row_values.append(new_values)
