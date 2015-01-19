@@ -142,9 +142,9 @@ def process_dir(data_path, processed_path, normalise=True, class_size=0):
         new_values += categoric
 
       else:
-        if normalise:
+        if normalise and max_val[k] != min_val[k]:
           new_values.append(str((float(line[j]) - min_val[k]) /
-                                float(max_val[k]  - min_val[k])))
+                                float(max_val[k] - min_val[k])))
         else:
           new_values.append(line[j])
     row_values.append(new_values)
