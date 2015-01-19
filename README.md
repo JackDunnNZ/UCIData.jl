@@ -1,4 +1,4 @@
-## UCI Machine Learning Repository conversion script
+# UCI ML Repository conversion script
 
 This is a script for converting UCI Machine Learning Repository data into a common format. The UCI ML repository is a useful source for machine learning datasets for testing and benchmarking, but the format of datasets is not consistent. This means effort is required in order to make use of new datasets since they need to be read differently.
 
@@ -6,7 +6,7 @@ Instead, the aim is to convert the datasets into a common format (CSV), where ea
 
     ID,attribute_1,attribute_2,...,attribute_n,class
     
-### Overview of script
+## Overview of script
 
 A number of features are present:
 
@@ -15,7 +15,7 @@ A number of features are present:
 - Optionally, the data values can be normalised to a 0-1 range.
 - Optionally, the dataset can be broken into a number of output files with different class combinations. For example, if you are working with a binary classifier, the output files should contain two classes only. The script can output a separate dataset for each pairwise combination of classes in the original dataset.
 
-### Running the script
+## Running the script
 
 Use the following command from the root folder:
   
@@ -28,7 +28,7 @@ Additional options are available:
 - add the `-n` flag to normalise the data values
 - add the `-c` flag followed by an integer to limit the number of classes in the output. For instance, you would use `python convert.py -c 2` if working with a binary classifier.
     
-### Guide to config files
+## Guide to config files
 
 Due to the varying nature of the datasets in the repository, the script needs to behave differently for different datasets. This is achieved using the `config.ini` files present in each dataset folder. An example of this file is:
 
@@ -90,11 +90,11 @@ An integer number of header lines in the dataset before the values are reached.
 
 The encoding of the dataset as a string. Must match a [supported Python 2 codec](https://docs.python.org/2/library/codecs.html#standard-encodings). Usually `ascii` will be sufficient.
 
-### TODO
+## TODO
 
 - Fix up `split.py` for splitting data into training/testing sets.
 - Add more datasets!
 
-### Contributing
+## Contributing
 
 Please feel free to add new datasets via pull request!
