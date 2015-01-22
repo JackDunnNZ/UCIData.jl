@@ -5,7 +5,7 @@ dataset_path = "datafiles/climate-model-simulation-crashes/climate-model-simulat
 
 data = readlines(`cat $dataset_path` |> `tr -s '[:blank:]' ','`)
 
-f = open(dataset_path, "w")
+f = open("$dataset_path.custom", "w")
 for line in data
   line = rstrip(line)
   # Trim leading comma

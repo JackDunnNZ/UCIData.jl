@@ -60,20 +60,21 @@ function processDir(data_path::String, processed_path::String)
 
   if !isfile(dataset_path)
     download(data_url, dataset_path)
+  end
 
-    # Any time we need custom behavior, call the custom.jl file.
-    # This is for when the UCI file is abnormal.
-    custom_path = joinpath(data_path, "custom.jl")
-    if isfile(custom_path)
-      include(custom_path)
-    end
+  # Any time we need custom behavior, call the custom.jl file.
+  # This is for when the UCI file is abnormal.
+  custom_path = joinpath(data_path, "custom.jl")
+  if isfile(custom_path)
+    include(custom_path)
+    dataset_path = "$dataset_path.custom"
   end
 
   df = readtable(
       dataset_path,
       header=false,
       separator=separator,
-      nastrings=["", "NA", "?"],
+      nastrings=["", "NA", "?", "*"],
       skipstart=header_lines
   )
 

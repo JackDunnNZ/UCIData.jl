@@ -6,7 +6,7 @@ f = open(dataset_path)
 data = readlines(f)
 close(f)
 
-f = open(dataset_path, "w")
+f = open("$dataset_path.custom", "w")
 for (i, line) in enumerate(data)
   if i == 50
     line = line[2:end]

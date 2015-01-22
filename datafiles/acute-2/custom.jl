@@ -9,6 +9,6 @@ close(f)
 
 data = replace(data, ",", ".")
 
-f = open(dataset_path, "w")
+f = open("$dataset_path.custom", "w")
 write(f, data)
 close(f)

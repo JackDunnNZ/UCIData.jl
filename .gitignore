@@ -1,4 +1,4 @@
-datafiles/*/*.orig
+datafiles/*/*.orig*
 
 processed/
 
