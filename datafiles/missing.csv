@@ -58,3 +58,16 @@ qualitative-structure-activity-relationships,Not multivariate data
 quadruped-mammals,Data generator not dataset
 servo,Regression dataset
 solar-flare,Regression dataset
+soybean-large,Test and train
+challenger-usa-space-shuttle-o-ring,Regression dataset
+low-resolution-spectrometer,Weird format
+spect-heart,Test and train
+spectf-heart,Test and train
+sponge,Clustering dataset
+statlog-project-vehicle,Multiple files
+statlog-project-landsat-satellite,Test and train
+statlog-project-shuttle,Test and train. zipped file
+statlog-project-australian-credit-screening,Dupe of `credit-approval`
+statlog-project-heart-disease,Dupe of `heart-disease-cleveland`
+statlog-project-image-segmentation,Dupe of `image-segmentation`
+student-loan-relational,Not a dataset
