@@ -35,7 +35,7 @@ led-display-creator,Data is contained in c file
 liver-disorders,Ill-defined task
 logic-theorist,Not a dataset
 lymphography,Restricted access
-mechanical-analysis,Zipped file, varying number of attributes per instance
+mechanical-analysis,Zipped file varying number of attributes per instance
 meta-data,Regression dataset
 mobile-robots,Weird format, zipped file
 molecular-biology-promotor-gene-sequences,Not multivariate data
