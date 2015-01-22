@@ -37,7 +37,7 @@ logic-theorist,Not a dataset
 lymphography,Restricted access
 mechanical-analysis,Zipped file varying number of attributes per instance
 meta-data,Regression dataset
-mobile-robots,Weird format, zipped file
+mobile-robots,Weird format zipped file
 molecular-biology-promotor-gene-sequences,Not multivariate data
 molecular-biology-protein-secondary-structure,Not multivariate data
 molecular-biology-splice-junction-gene-sequences,Not multivariate data
