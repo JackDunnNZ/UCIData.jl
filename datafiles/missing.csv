@@ -1,0 +1,29 @@
+Name,Reason
+adult,Test and train. Predictor is whether attribute > 50
+annealing,Test and train. NA and missing values have different meanings
+anonymous-microsoft-web-data,Recommender dataset
+artificial-characters,Test and train. Zipped
+audiology,Non-standard representation
+audiology-standardized,24 classes to predict
+auto-mpg,Regression
+automobile,Regression
+badges,Abnormal dataset
+pittsburgh-bridges,Bad dataset description
+census-data,See adult
+chess-king-rook-vs-king-knight,Not a dataset
+chess-domain-theories,Not relevant
+bach-chorales,Grammar task
+connect-4,Zipped file
+japanese-credit-screening,Weird format
+computer-hardware,Regression
+covertype,Zipped file
+diabetes,Zipped file
+dgp2,Not a dataset
+document-understanding,Weird format
+ebl-domain-theories,Not a dataset
+function-finding,Not a dataset
+horse-colic,Present but has test and training
+housing,Regression
+icu,Zipped
+image-segmentation,Present but has test and training
+internet-ads,Messy format (mix of whitespace and commas)
