@@ -1,6 +1,6 @@
 # UCI ML Repository conversion script
 
-This is a script for converting UCI Machine Learning Repository data into a common format. The UCI ML repository is a useful source for machine learning datasets for testing and benchmarking, but the format of datasets is not consistent. This means effort is required in order to make use of new datasets since they need to be read differently.
+This is a script for converting [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets.html) datasets into a common format. The UCI ML repository is a useful source for machine learning datasets for testing and benchmarking, but the format of datasets is not consistent. This means effort is required in order to make use of new datasets since they need to be read differently.
 
 Instead, the aim is to convert the datasets into a common format (CSV), where each line is as follows:
 
