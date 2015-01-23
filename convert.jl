@@ -84,7 +84,24 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
 
   output_df = DataFrame()
   output_df[:id] = [makeId(df, i, id_indices) for i in 1:size(df, 1)]
-  output_df[1+(1:length(value_indices))] = df[value_indices]
+
+  # Construct output values
+  index = 2
+  # Replace categoric variables with binaries
+  for i in value_indices
+    if i in categoric_indices
+      categories = levels(pool(df[i]))
+      n = length(categories)
+      for j in 2:n
+        output_df[index] = int(df[i] .== categories[j])
+        index += 1
+      end
+    else
+      output_df[index] = df[i]
+      index += 1
+    end
+  end
+
   output_df[:n_class] = df[class_index]
 
   mkpath(processed_path)
@@ -105,7 +122,7 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
 
   for dir in readdir(datafiles_path)
     data_path = joinpath(datafiles_path, dir)
-    if !isdir(data_path)
+    if !isdir(data_path) || dir != "car-evaluation"
       continue
     end
     println("Processing $dir")
