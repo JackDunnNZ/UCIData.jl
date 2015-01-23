@@ -74,7 +74,7 @@ function processDir(data_path::String, processed_path::String)
       dataset_path,
       header=false,
       separator=separator,
-      nastrings=["", "NA", "?", "*"],
+      nastrings=["", "NA", "?", "*", "#DIV/0!"],
       truestrings=["T", "t", "TRUE", "true", "y", "yes"],
       falsestrings=["F", "f", "FALSE", "false", "n", "no"],
       skipstart=header_lines
