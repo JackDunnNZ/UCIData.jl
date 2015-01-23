@@ -95,9 +95,12 @@ end
 function processAllDirs(normalize::Bool=false, class_size::Int=0)
   root_path = dirname(Base.source_path())
   datafiles_path = joinpath(root_path, "datafiles")
-  println("$datafiles_path")
 
-  processed_path = joinpath(root_path, "processed")
+
+  normalize_path = normalize ? "normalized" : "original"
+  class_size_path = class_size > 0 ? str(class_size) : "all"
+  processed_path = joinpath(root_path, "processed", normalize_path,
+                            class_size_path)
   mkpath(processed_path)
 
   for dir in readdir(datafiles_path)
@@ -106,7 +109,7 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
       continue
     end
     println("Processing $dir")
-    processDir(data_path, joinpath(processed_path, dir), normalize, class_size)
+    processDir(data_path, processed_path, normalize, class_size)
   end
 end
 
