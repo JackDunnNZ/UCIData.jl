@@ -1,3 +1,4 @@
+using ArgParse
 using ConfParser
 using DataFrames
 
@@ -22,7 +23,8 @@ function makeId(df::DataFrame, i::Int, id_indices::Array{Int})
   #return "id_$id"
 end
 
-function processDir(data_path::String, processed_path::String)
+function processDir(data_path::String, processed_path::String, normalize::Bool,
+                    class_size::Int)
   config_path = joinpath(data_path, "config.ini")
   if !isfile(config_path)
     return
@@ -90,7 +92,7 @@ function processDir(data_path::String, processed_path::String)
   writetable(output_path, output_df, separator=',', header=false)
 end
 
-function processAllDirs()
+function processAllDirs(normalize::Bool=false, class_size::Int=0)
   root_path = dirname(Base.source_path())
   datafiles_path = joinpath(root_path, "datafiles")
   println("$datafiles_path")
@@ -104,8 +106,26 @@ function processAllDirs()
       continue
     end
     println("Processing $dir")
-    processDir(data_path, joinpath(processed_path, dir))
+    processDir(data_path, joinpath(processed_path, dir), normalize, class_size)
   end
 end
 
-processAllDirs()
+function main()
+  s = ArgParseSettings()
+  @add_arg_table s begin
+    "--normalize", "-n"
+      help = "set if the data is to be normalized"
+      action = :store_true
+    "--class_size", "-c"
+      help = "optional: the number of classes to use in output datasets. " *
+             "Leave as zero to include all classes."
+      arg_type = Int
+      default = 0
+  end
+  parsed_args = parse_args(s)
+  normalize = parsed_args["normalize"]
+  class_size = parsed_args["class_size"]
+  processAllDirs(normalize, class_size)
+end
+
+main()
