@@ -149,11 +149,25 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
     end
   end
 
-  output_df[:n_class] = df[class_index]
-
-  mkpath(processed_path)
   output_path = joinpath(processed_path, name)
-  writetable(output_path, output_df, separator=',', header=false)
+
+  if class_size == 0
+    output_df[:class] = df[class_index]
+    writetable(output_path, output_df, separator=',', header=false)
+  else
+    classes = levels(pool(df[class_index]))
+    output_df[:class] = 0
+    for comb in combinations(1:length(classes), class_size)
+      output_rows = Int64[]
+      for i in 1:class_size
+        rows = df[class_index] .== classes[comb[i]]
+        append!(output_rows, find(rows))
+        output_df[rows, :class] = i - 1
+      end
+      writetable("$output_path.$(comb[1]).$(comb[2])",
+                 output_df[output_rows, :], separator=',', header=false)
+    end
+  end
 end
 
 function processAllDirs(normalize::Bool=false, class_size::Int=0)
@@ -162,7 +176,7 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
 
 
   normalize_path = normalize ? "normalized" : "original"
-  class_size_path = class_size > 0 ? str(class_size) : "all"
+  class_size_path = class_size > 0 ? "$class_size" : "all"
   processed_path = joinpath(root_path, "processed", normalize_path,
                             class_size_path)
   mkpath(processed_path)
