@@ -51,7 +51,7 @@ For example, if you wanted to normalize the data and were working with a binary 
       --train TRAIN    optional: percentage of data to include in training
                        set (type: Int64, default: 80)
 
-You can specify a seed for reproducible results, or call `julia split.jl -s \`date +%N\`` on OS X or Linux to use the current system time as the seed.
+You can specify a seed for reproducible results, or call ``julia split.jl -s `date +%N` `` on OS X or Linux to use the current system time as the seed.
 
 The split files are output to the `split` folder in separate `test` and `train` folders.
     
