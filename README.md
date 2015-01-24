@@ -23,6 +23,21 @@ Use the following command from the root folder:
     julia convert.jl
 
 This processes all data folders in the `datafiles` folder. The output directory is the `processed` folder.
+
+#### Options
+
+It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files
+
+    usage: convert.jl [-n] [-c CLASS_SIZE] [-h]
+
+    optional arguments:
+      -n, --normalize       set if the data is to be normalized
+      -c, --class_size CLASS_SIZE
+                            optional: the number of classes to use in
+                            output datasets. Leave as zero to include all
+                            classes. (type: Int64, default: 0)
+                            
+For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
     
 ## Guide to config files
 
@@ -83,10 +98,12 @@ An integer number of header lines in the dataset before the values are reached.
 
 ## TODO
 
-- Normalize script
-- Categorical script
 - Fix up `split.py` for splitting data into training/testing sets.
 - Add more datasets!
+
+### Missing datasets
+
+`missing.csv` contains information on the datasets that haven't yet been added.
 
 ## Contributing
 
