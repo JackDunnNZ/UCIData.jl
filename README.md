@@ -38,6 +38,22 @@ It is possible to normalize the data to [0, 1], and/or to limit the number of cl
                             classes. (type: Int64, default: 0)
                             
 For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
+
+## Splitting into training and test sets
+
+`split.jl` offers an easy way to split all of the datasets into training and test sets, leaving you free to handle splitting the training set later (into training and validation, or using cross validation etc.)
+
+    usage: split.jl [-s SEED] [--train TRAIN] [-h]
+
+    optional arguments:
+      -s, --seed SEED  optional: specify a seed for the RNG (type: Int64,
+                       default: 0)
+      --train TRAIN    optional: percentage of data to include in training
+                       set (type: Int64, default: 80)
+
+You can specify a seed for reproducible results, or call `julia split.jl -s \`date +%N\`` on OS X or Linux to use the current system time as the seed.
+
+The split files are output to the `split` folder in separate `test` and `train` folders.
     
 ## Guide to config files
 
@@ -98,7 +114,6 @@ An integer number of header lines in the dataset before the values are reached.
 
 ## TODO
 
-- Fix up `split.py` for splitting data into training/testing sets.
 - Add more datasets!
 
 ### Missing datasets
