@@ -2,6 +2,8 @@ using ArgParse
 using ConfParser
 using DataFrames
 
+TOL = 1e-8
+
 function confStringToIndices(s::String)
   [int(s)]
 end
@@ -21,6 +23,16 @@ function makeId(df::DataFrame, i::Int, id_indices::Array{Int})
     id = join([df[i, j] for j in id_indices], "_")
   end
   #return "id_$id"
+end
+
+function intOrNA(input::DataArray{Bool, 1})
+  n = length(input)
+  output = DataArray(Int, n)
+  for i in 1:n
+    value = input[i]
+    output[i] = isna(value) ? NA : int(value)
+  end
+  return output
 end
 
 function processDir(data_path::String, processed_path::String, normalize::Bool,
@@ -82,23 +94,58 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
       skipstart=header_lines
   )
 
+  # Delete rows with NA values. This is needed by normalize
+  for i in 1:size(df, 2)
+    deleterows!(df,find(isna(df[:, i])))
+  end
+  num_rows = size(df, 1)
+
+  if num_rows == 0
+    return
+  end
+
   output_df = DataFrame()
   output_df[:id] = [makeId(df, i, id_indices) for i in 1:size(df, 1)]
 
   # Construct output values
   index = 2
-  # Replace categoric variables with binaries
   for i in value_indices
+    # Replace categoric variables with binaries
     if i in categoric_indices
       categories = levels(pool(df[i]))
       n = length(categories)
       for j in 2:n
-        output_df[index] = int(df[i] .== categories[j])
+        output_df[index] = intOrNA(df[i] .== categories[j])
         index += 1
       end
     else
       output_df[index] = df[i]
       index += 1
+    end
+  end
+
+  if normalize
+    mins = colwise(minimum, output_df[2:end])
+    maxs = colwise(maximum, output_df[2:end])
+    for j in 2:size(output_df, 2)
+      new_col = PooledDataArray(Float64, num_rows)
+
+      denom = maxs[j - 1][1] - mins[j - 1][1]
+      # If max and min are the same, this column is all the same value
+      # We can just set denom to 1 and everything comes out as zero
+      if denom < TOL
+        for i in 1:size(output_df, 1)
+          new_col[i] = isna(output_df[i, j]) ? NA : 0
+        end
+      else
+        for i in 1:size(output_df, 1)
+          value = output_df[i, j] - mins[j - 1][1]
+          value = value < TOL ? 0 : value
+          new_col[i] = value / denom
+        end
+      end
+
+      output_df[j] = new_col
     end
   end
 
@@ -122,7 +169,7 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
 
   for dir in readdir(datafiles_path)
     data_path = joinpath(datafiles_path, dir)
-    if !isdir(data_path) || dir != "car-evaluation"
+    if !isdir(data_path)
       continue
     end
     println("Processing $dir")
