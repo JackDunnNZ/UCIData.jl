@@ -171,7 +171,7 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
 end
 
 function processAllDirs(normalize::Bool=false, class_size::Int=0)
-  root_path = dirname(Base.source_path())
+  root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles")
 
 
