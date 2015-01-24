@@ -174,7 +174,6 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
   root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles")
 
-
   normalize_path = normalize ? "normalized" : "original"
   class_size_path = class_size > 0 ? "$class_size" : "all"
   processed_path = joinpath(root_path, "processed", normalize_path,
