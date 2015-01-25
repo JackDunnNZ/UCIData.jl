@@ -1,8 +1,7 @@
-using ArgParse
 using DataFrames
 using MLBase
 
-function splitDataset(dataset_path::String, train_path::String,
+function splitdataset(dataset_path::String, train_path::String,
                       test_path::String, seed::Int, train_size::Int)
   df = readtable(dataset_path, header=false)
   n = size(df, 1)
@@ -20,7 +19,7 @@ function splitDataset(dataset_path::String, train_path::String,
   writetable(testset_path, df[test_inds, :], separator=',', header=false)
 end
 
-function splitAllDatasets(seed::Int=0, train_size::Int=80)
+function splitalldatasets(seed::Int=0, train_size::Int=80)
   root_path = dirname(@__FILE__)
   processed_path = joinpath(root_path, "processed")
 
@@ -47,28 +46,8 @@ function splitAllDatasets(seed::Int=0, train_size::Int=80)
         if !isfile(dataset_path)
           continue
         end
-        splitDataset(dataset_path, train_path, test_path, seed, train_size)
+        splitdataset(dataset_path, train_path, test_path, seed, train_size)
       end
     end
   end
 end
-
-function main()
-  s = ArgParseSettings()
-  @add_arg_table s begin
-    "--seed", "-s"
-      help = "optional: specify a seed for the RNG"
-      arg_type = Int
-      default = 0
-    "--train"
-      help = "optional: percentage of data to include in training set"
-      arg_type = Int
-      default = 80
-  end
-  parsed_args = parse_args(s)
-  seed = parsed_args["seed"]
-  train_size = parsed_args["train"]
-  splitAllDatasets(seed, train_size)
-end
-
-main()
