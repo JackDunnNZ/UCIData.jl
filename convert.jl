@@ -3,11 +3,11 @@ using DataFrames
 
 TOL = 1e-8
 
-function confStringToIndices(s::String)
+function confstringtoindices(s::String)
   [int(s)]
 end
 
-function confStringToIndices(s::Array{String})
+function confstringtoindices(s::Array{String})
   if isempty(s)
     Int[]
   else
@@ -15,7 +15,7 @@ function confStringToIndices(s::Array{String})
   end
 end
 
-function makeId(df::DataFrame, i::Int, id_indices::Array{Int})
+function makeid(df::DataFrame, i::Int, id_indices::Array{Int})
   if isempty(id_indices)
     id = "$i"
   else
@@ -24,7 +24,7 @@ function makeId(df::DataFrame, i::Int, id_indices::Array{Int})
   #return "id_$id"
 end
 
-function intOrNA(input::DataArray{Bool, 1})
+function intorna(input::DataArray{Bool, 1})
   n = length(input)
   output = DataArray(Int, n)
   for i in 1:n
@@ -34,7 +34,7 @@ function intOrNA(input::DataArray{Bool, 1})
   return output
 end
 
-function processDir(data_path::String, processed_path::String, normalize::Bool,
+function processdir(data_path::String, processed_path::String, normalize::Bool,
                     class_size::Int)
   config_path = joinpath(data_path, "config.ini")
   if !isfile(config_path)
@@ -57,9 +57,9 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
   class_index = int(class_index)
   header_lines = int(header_lines)
 
-  id_indices = confStringToIndices(id_indices)
-  value_indices = confStringToIndices(value_indices)
-  categoric_indices = confStringToIndices(categoric_indices)
+  id_indices = confstringtoindices(id_indices)
+  value_indices = confstringtoindices(value_indices)
+  categoric_indices = confstringtoindices(categoric_indices)
 
   # Get char from string
   if separator == "comma"
@@ -104,7 +104,7 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
   end
 
   output_df = DataFrame()
-  output_df[:id] = [makeId(df, i, id_indices) for i in 1:size(df, 1)]
+  output_df[:id] = [makeid(df, i, id_indices) for i in 1:size(df, 1)]
 
   # Construct output values
   index = 2
@@ -114,7 +114,7 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
       categories = levels(pool(df[i]))
       n = length(categories)
       for j in 2:n
-        output_df[index] = intOrNA(df[i] .== categories[j])
+        output_df[index] = intorna(df[i] .== categories[j])
         index += 1
       end
     else
@@ -169,7 +169,7 @@ function processDir(data_path::String, processed_path::String, normalize::Bool,
   end
 end
 
-function processAllDirs(normalize::Bool=false, class_size::Int=0)
+function processalldirs(normalize::Bool=false, class_size::Int=0)
   root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles")
 
@@ -185,6 +185,6 @@ function processAllDirs(normalize::Bool=false, class_size::Int=0)
       continue
     end
     println("Processing $dir")
-    processDir(data_path, processed_path, normalize, class_size)
+    processdir(data_path, processed_path, normalize, class_size)
   end
 end

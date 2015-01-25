@@ -17,7 +17,7 @@ function main()
   parsed_args = parse_args(s)
   normalize = parsed_args["normalize"]
   class_size = parsed_args["class_size"]
-  processAllDirs(normalize, class_size)
+  processalldirs(normalize, class_size)
 end
 
 main()
