@@ -18,17 +18,17 @@ The datasets are not checked in to git in order to minimise the size of the repo
 
 ### Running the script
 
+#### Command line
+
 Use the following command from the root folder:
   
-    julia convert.jl
+    julia runconvert.jl
 
 This processes all data folders in the `datafiles` folder. The output directory is the `processed` folder.
 
-#### Options
-
 It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files
 
-    usage: convert.jl [-n] [-c CLASS_SIZE] [-h]
+    usage: runconvert.jl [-n] [-c CLASS_SIZE] [-h]
 
     optional arguments:
       -n, --normalize       set if the data is to be normalized
@@ -39,11 +39,25 @@ It is possible to normalize the data to [0, 1], and/or to limit the number of cl
                             
 For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
 
+#### From Julia
+
+First include the file:
+
+    include("convert.jl")
+
+Then use the `processalldirs` function to run the process:
+
+    processalldirs(normalize::Bool=false, class_size::Int=0)
+
 ## Splitting into training and test sets
 
 `split.jl` offers an easy way to split all of the datasets into training and test sets, leaving you free to handle splitting the training set later (into training and validation, or using cross validation etc.)
 
-    usage: split.jl [-s SEED] [--train TRAIN] [-h]
+#### Command line
+
+Use the `runsplit.jl` file:
+
+    usage: runsplit.jl [-s SEED] [--train TRAIN] [-h]
 
     optional arguments:
       -s, --seed SEED  optional: specify a seed for the RNG (type: Int64,
@@ -54,6 +68,16 @@ For example, if you wanted to normalize the data and were working with a binary 
 You can specify a seed for reproducible results, or call `julia split.jl -s \`date +%N\`` on OS X or Linux to use the current system time as the seed.
 
 The split files are output to the `split` folder in separate `test` and `train` folders.
+
+#### From Julia
+
+First include the file:
+
+    include("split.jl")
+
+Then use the `splitalldatasets` function to run the process:
+
+    splitalldatasets(seed::Int=0, train_size::Int=80)
     
 ## Guide to config files
 
