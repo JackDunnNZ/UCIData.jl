@@ -173,7 +173,8 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
         append!(output_rows, find(rows))
         output_df[rows, :class] = i - 1
       end
-      writetable("$output_path.$(comb[1]).$(comb[2])",
+      outputsuffix = join(comb, ".")
+      writetable("$output_path.$outputsuffix",
                  output_df[output_rows, :], separator=',', header=false)
     end
   end
