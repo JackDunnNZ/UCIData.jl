@@ -153,6 +153,16 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
   if class_size == 0
     output_df[:class] = df[class_index]
     writetable(output_path, output_df, separator=',', header=false)
+  elseif class_size == 1
+    classes = levels(pool(df[class_index]))
+    # Skip the first class so we only output 1 files for 2 classes
+    if length(classes) == 2
+      classes = classes[2:end]
+    end
+    for (i, class) in enumerate(classes)
+      output_df[:class] = intorna(df[class_index] .== class)
+      writetable("$output_path.$i", output_df, separator=',', header=false)
+    end
   else
     classes = levels(pool(df[class_index]))
     output_df[:class] = 0

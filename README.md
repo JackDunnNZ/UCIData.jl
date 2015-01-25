@@ -39,6 +39,8 @@ It is possible to normalize the data to [0, 1], and/or to limit the number of cl
                             
 For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
 
+If `class_size` is set to `1`, then the behavior is slightly different. One file will be output for each class in the dataset, in which the respective class will take value `1` while all other classes take value `0`. These output files are then suited for the task of distinguishing a single class from all others.
+
 #### From Julia
 
 First include the file:
