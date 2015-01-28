@@ -2,13 +2,16 @@ using DataFrames
 using MLBase
 
 function splitdataset(dataset_path::String, train_path::String,
-                      test_path::String, seed::Int, train_size::Int)
+                      test_path::String, seed::Int, train_size::Int,
+                      stratified::Bool)
   df = readtable(dataset_path, header=false)
   n = size(df, 1)
   sn = iround(n * train_size / 100)
 
   srand(seed)
-  train_inds = collect(RandomSub(n, sn, 1))[1]
+  subfun = (stratified ? StratifiedRandomSub(df[end], sn, 1)
+                       : RandomSub(n, sn, 1))
+  train_inds = collect(subfun)[1]
   test_inds = setdiff(1:n, train_inds)
 
   dataset_name = basename(dataset_path)
@@ -19,7 +22,8 @@ function splitdataset(dataset_path::String, train_path::String,
   writetable(testset_path, df[test_inds, :], separator=',', header=false)
 end
 
-function splitalldatasets(seed::Int=0, train_size::Int=80)
+function splitalldatasets(seed::Int=0, train_size::Int=80,
+                          stratified::Bool=false)
   root_path = dirname(@__FILE__)
   processed_path = joinpath(root_path, "processed")
 
@@ -46,7 +50,8 @@ function splitalldatasets(seed::Int=0, train_size::Int=80)
         if !isfile(dataset_path)
           continue
         end
-        splitdataset(dataset_path, train_path, test_path, seed, train_size)
+        splitdataset(dataset_path, train_path, test_path, seed, train_size,
+                     stratified)
       end
     end
   end

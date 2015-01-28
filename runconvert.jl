@@ -13,11 +13,17 @@ function main()
              "Leave as zero to include all classes."
       arg_type = Int
       default = 0
+    "--min_size", "-m"
+      help = "optional: the minimum number of datapoints for each class. " *
+             "If any class has fewer than this, no file will be created."
+      arg_type = Int
+      default = 0
   end
   parsed_args = parse_args(s)
   normalize = parsed_args["normalize"]
   class_size = parsed_args["class_size"]
-  processalldirs(normalize, class_size)
+  min_size = parsed_args["min_size"]
+  processalldirs(normalize, class_size, min_size)
 end
 
 main()

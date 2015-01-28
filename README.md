@@ -28,7 +28,7 @@ This processes all data folders in the `datafiles` folder. The output directory 
 
 It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files
 
-    usage: runconvert.jl [-n] [-c CLASS_SIZE] [-h]
+    usage: runconvert.jl [-n] [-c CLASS_SIZE] [-m MIN_SIZE] [-h]
 
     optional arguments:
       -n, --normalize       set if the data is to be normalized
@@ -36,10 +36,17 @@ It is possible to normalize the data to [0, 1], and/or to limit the number of cl
                             optional: the number of classes to use in
                             output datasets. Leave as zero to include all
                             classes. (type: Int64, default: 0)
-                            
+      -m, --min_size MIN_SIZE
+                            optional: the minimum number of datapoints for
+                            each class. If any class has fewer than this,
+                            no file will be created. (type: Int64,
+                            default: 0)
+
 For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
 
 If `class_size` is set to `1`, then the behavior is slightly different. One file will be output for each class in the dataset, in which the respective class will take value `1` while all other classes take value `0`. These output files are then suited for the task of distinguishing a single class from all others.
+
+`min_size` when set ensures that no output files are created where any class has fewer than this number of observations. For example, setting this to 10 will ensure that each class present in the output files has more than 10 observations.
 
 #### From Julia
 
@@ -59,13 +66,16 @@ Then use the `processalldirs` function to run the process:
 
 Use the `runsplit.jl` file:
 
-    usage: runsplit.jl [-s SEED] [--train TRAIN] [-h]
+    usage: runsplit.jl [-s SEED] [--train TRAIN] [--stratified] [-h]
 
     optional arguments:
       -s, --seed SEED  optional: specify a seed for the RNG (type: Int64,
                        default: 0)
       --train TRAIN    optional: percentage of data to include in training
                        set (type: Int64, default: 80)
+      --stratified     optional: set to use stratified sampling
+
+Add the `stratified` flag to use stratified sampling when splitting, ensuring that training and test sets have roughly the same class distribution.
 
 You can specify a seed for reproducible results, or call ``julia split.jl -s `date +%N` `` on OS X or Linux to use the current system time as the seed.
 

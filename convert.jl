@@ -35,7 +35,7 @@ function intorna(input::DataArray{Bool, 1})
 end
 
 function processdir(data_path::String, processed_path::String, normalize::Bool,
-                    class_size::Int)
+                    class_size::Integer, min_size::Integer)
   config_path = joinpath(data_path, "config.ini")
   if !isfile(config_path)
     return
@@ -160,7 +160,12 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
       classes = classes[2:end]
     end
     for (i, class) in enumerate(classes)
-      output_df[:class] = intorna(df[class_index] .== class)
+      newclass = df[class_index] .== class
+      # Make sure the output has enough records
+      if sum(newclass) < min_size || sum(1 - newclass) < min_size
+        continue
+      end
+      output_df[:class] = intorna(newclass)
       writetable("$output_path.$i", output_df, separator=',', header=false)
     end
   else
@@ -168,19 +173,28 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
     output_df[:class] = 0
     for comb in combinations(1:length(classes), class_size)
       output_rows = Int64[]
+      output = true
       for i in 1:class_size
         rows = df[class_index] .== classes[comb[i]]
+        # Make sure the output has enough records
+        if sum(rows) < min_size
+          output = false
+          break
+        end
         append!(output_rows, find(rows))
         output_df[rows, :class] = i - 1
       end
-      outputsuffix = join(comb, ".")
-      writetable("$output_path.$outputsuffix",
-                 output_df[output_rows, :], separator=',', header=false)
+      if output
+        outputsuffix = join(comb, ".")
+        writetable("$output_path.$outputsuffix",
+                   output_df[output_rows, :], separator=',', header=false)
+      end
     end
   end
 end
 
-function processalldirs(normalize::Bool=false, class_size::Int=0)
+function processalldirs(normalize::Bool=false, class_size::Int=0,
+                        min_size::Integer=0)
   root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles")
 
@@ -196,6 +210,6 @@ function processalldirs(normalize::Bool=false, class_size::Int=0)
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, normalize, class_size)
+    processdir(data_path, processed_path, normalize, class_size, min_size)
   end
 end

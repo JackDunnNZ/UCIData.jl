@@ -13,11 +13,15 @@ function main()
       help = "optional: percentage of data to include in training set"
       arg_type = Int
       default = 80
+    "--stratified"
+      help = "optional: set to use stratified sampling"
+      action = :store_true
   end
   parsed_args = parse_args(s)
   seed = parsed_args["seed"]
   train_size = parsed_args["train"]
-  splitalldatasets(seed, train_size)
+  stratified = parsed_args["stratified"]
+  splitalldatasets(seed, train_size, stratified)
 end
 
 main()
