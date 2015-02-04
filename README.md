@@ -58,39 +58,6 @@ Then use the `processalldirs` function to run the process:
 
     processalldirs(normalize::Bool=false, class_size::Int=0)
 
-## Splitting into training and test sets
-
-`split.jl` offers an easy way to split all of the datasets into training and test sets, leaving you free to handle splitting the training set later (into training and validation, or using cross validation etc.)
-
-#### Command line
-
-Use the `runsplit.jl` file:
-
-    usage: runsplit.jl [-s SEED] [--train TRAIN] [--stratified] [-h]
-
-    optional arguments:
-      -s, --seed SEED  optional: specify a seed for the RNG (type: Int64,
-                       default: 0)
-      --train TRAIN    optional: percentage of data to include in training
-                       set (type: Int64, default: 80)
-      --stratified     optional: set to use stratified sampling
-
-Add the `stratified` flag to use stratified sampling when splitting, ensuring that training and test sets have roughly the same class distribution.
-
-You can specify a seed for reproducible results, or call ``julia split.jl -s `date +%N` `` on OS X or Linux to use the current system time as the seed.
-
-The split files are output to the `split` folder in separate `test` and `train` folders.
-
-#### From Julia
-
-First include the file:
-
-    include("split.jl")
-
-Then use the `splitalldatasets` function to run the process:
-
-    splitalldatasets(seed::Int=0, train_size::Int=80)
-    
 ## Guide to config files
 
 Due to the varying nature of the datasets in the repository, the script needs to behave differently for different datasets. This is achieved using the `config.ini` files present in each dataset folder. An example of this file is:
