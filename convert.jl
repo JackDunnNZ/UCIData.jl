@@ -150,6 +150,10 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
 
   output_path = joinpath(processed_path, name)
 
+  if class_size == -1
+    class_size = length(levels(pool(df[class_index])))
+  end
+
   if class_size == 0
     output_df[:class] = df[class_index]
     writetable(output_path, output_df, separator=',', header=false)
