@@ -34,8 +34,7 @@ function intorna(input::DataArray{Bool, 1})
   return output
 end
 
-function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool,
-                    class_size::Integer, min_size::Integer)
+function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
@@ -47,14 +46,14 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   name              = retrieve(conf, "info", "name")
   data_url          = retrieve(conf, "info", "data_url")
-  class_index       = retrieve(conf, "info", "class_index")
+  y_index           = retrieve(conf, "info", "y_index")
   id_indices        = retrieve(conf, "info", "id_indices")
   value_indices     = retrieve(conf, "info", "value_indices")
   categoric_indices = retrieve(conf, "info", "categoric_indices")
   separator         = retrieve(conf, "info", "separator")
   header_lines      = retrieve(conf, "info", "header_lines")
 
-  class_index = parse(Int, class_index)
+  y_index = parse(Int, y_index)
   header_lines = parse(Int, header_lines)
 
   id_indices = confstringtoindices(id_indices)
@@ -150,62 +149,16 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   output_path = joinpath(processed_path, name)
 
-  if class_size == -1
-    class_size = length(levels(pool(df[class_index])))
-  end
-
-  if class_size == 0
-    output_df[:class] = df[class_index]
-    writetable(output_path, output_df, separator=',', header=false)
-  elseif class_size == 1
-    classes = levels(pool(df[class_index]))
-    # Skip the first class so we only output 1 files for 2 classes
-    if length(classes) == 2
-      classes = classes[2:end]
-    end
-    for (i, class) in enumerate(classes)
-      newclass = df[class_index] .== class
-      # Make sure the output has enough records
-      if sum(newclass) < min_size || sum(1 - newclass) < min_size
-        continue
-      end
-      output_df[:class] = intorna(newclass)
-      writetable("$output_path.$i", output_df, separator=',', header=false)
-    end
-  else
-    classes = levels(pool(df[class_index]))
-    output_df[:class] = 0
-    for comb in combinations(1:length(classes), class_size)
-      output_rows = Int64[]
-      output = true
-      for i in 1:class_size
-        rows = df[class_index] .== classes[comb[i]]
-        # Make sure the output has enough records
-        if sum(rows) < min_size
-          output = false
-          break
-        end
-        append!(output_rows, find(rows))
-        output_df[rows, :class] = i - 1
-      end
-      if output
-        outputsuffix = join(comb, ".")
-        writetable("$output_path.$outputsuffix",
-                   output_df[output_rows, :], separator=',', header=false)
-      end
-    end
-  end
+  output_df[:class] = df[y_index]
+  writetable(output_path, output_df, separator=',', header=false)
 end
 
-function processalldirs(normalize::Bool=false, class_size::Int=0,
-                        min_size::Integer=0)
+function processalldirs(normalize::Bool=false)
   root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles")
 
   normalize_path = normalize ? "normalized" : "original"
-  class_size_path = class_size > 0 ? "$class_size" : "all"
-  processed_path = joinpath(root_path, "processed", normalize_path,
-                            class_size_path)
+  processed_path = joinpath(root_path, "processed", normalize_path)
   mkpath(processed_path)
 
   for dir in readdir(datafiles_path)
@@ -214,6 +167,6 @@ function processalldirs(normalize::Bool=false, class_size::Int=0,
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, normalize, class_size, min_size)
+    processdir(data_path, processed_path, normalize)
   end
 end
