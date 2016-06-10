@@ -3,11 +3,11 @@ using DataFrames
 
 TOL = 1e-8
 
-function confstringtoindices(s::String)
-  [int(s)]
+function confstringtoindices(s::AbstractString)
+  [parse(Int, s)]
 end
 
-function confstringtoindices(s::Array{String})
+function confstringtoindices(s::Array)
   if isempty(s)
     Int[]
   else
@@ -29,14 +29,14 @@ function intorna(input::DataArray{Bool, 1})
   output = DataArray(Int, n)
   for i in 1:n
     value = input[i]
-    output[i] = isna(value) ? NA : int(value)
+    output[i] = isna(value) ? NA : Int(value)
   end
   return output
 end
 
-function processdir(data_path::String, processed_path::String, normalize::Bool,
+function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool,
                     class_size::Integer, min_size::Integer)
-  config_path = joinpath(data_path, "config.ini")
+  config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
   end
@@ -54,7 +54,7 @@ function processdir(data_path::String, processed_path::String, normalize::Bool,
   separator         = retrieve(conf, "info", "separator")
   header_lines      = retrieve(conf, "info", "header_lines")
 
-  class_index = int(class_index)
+  class_index = parse(Int, class_index)
   header_lines = int(header_lines)
 
   id_indices = confstringtoindices(id_indices)
