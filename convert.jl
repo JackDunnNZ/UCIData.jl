@@ -3,6 +3,36 @@ using DataFrames
 
 TOL = 1e-8
 
+function numberstringtoint(s)
+  if s == "one"
+    1
+  elseif s == "two"
+    2
+  elseif s == "three"
+    3
+  elseif s == "four"
+    4
+  elseif s == "five"
+    5
+  elseif s == "six"
+    6
+  elseif s == "seven"
+    7
+  elseif s == "eight"
+    8
+  elseif s == "nine"
+    9
+  elseif s == "ten"
+    10
+  elseif s == "eleven"
+    11
+  elseif s == "twelve"
+    12
+  else
+    throw("unknown number")
+  end
+end
+
 function confstringtoindices(s::AbstractString)
   [parse(Int, s)]
 end
@@ -44,14 +74,15 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
   conf = ConfParse(config_path)
   parse_conf!(conf)
 
-  name              = retrieve(conf, "info", "name")
-  data_url          = retrieve(conf, "info", "data_url")
-  y_index           = retrieve(conf, "info", "y_index")
-  id_indices        = retrieve(conf, "info", "id_indices")
-  value_indices     = retrieve(conf, "info", "value_indices")
-  categoric_indices = retrieve(conf, "info", "categoric_indices")
-  separator         = retrieve(conf, "info", "separator")
-  header_lines      = retrieve(conf, "info", "header_lines")
+  name                 = retrieve(conf, "info", "name")
+  data_url             = retrieve(conf, "info", "data_url")
+  y_index              = retrieve(conf, "info", "y_index")
+  id_indices           = retrieve(conf, "info", "id_indices")
+  value_indices        = retrieve(conf, "info", "value_indices")
+  categoric_indices    = retrieve(conf, "info", "categoric_indices")
+  make_integer_indices = retrieve(conf, "info", "make_integer_indices")
+  separator            = retrieve(conf, "info", "separator")
+  header_lines         = retrieve(conf, "info", "header_lines")
 
   y_index = parse(Int, y_index)
   header_lines = parse(Int, header_lines)
@@ -59,6 +90,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
   id_indices = confstringtoindices(id_indices)
   value_indices = confstringtoindices(value_indices)
   categoric_indices = confstringtoindices(categoric_indices)
+  make_integer_indices = confstringtoindices(make_integer_indices)
 
   # Get char from string
   if separator == "comma"
@@ -116,6 +148,9 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
         output_df[index] = intorna(df[i] .== categories[j])
         index += 1
       end
+    elseif i in make_integer_indices
+      output_df[index] = Int[numberstringtoint(x) for x in df[i]]
+      index += 1
     else
       output_df[index] = df[i]
       index += 1
