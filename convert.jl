@@ -11,7 +11,7 @@ function confstringtoindices(s::Array)
   if isempty(s)
     Int[]
   else
-    map(int, s)
+    [parse(Int,x) for x in s]
   end
 end
 
@@ -55,7 +55,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
   header_lines      = retrieve(conf, "info", "header_lines")
 
   class_index = parse(Int, class_index)
-  header_lines = int(header_lines)
+  header_lines = parse(Int, header_lines)
 
   id_indices = confstringtoindices(id_indices)
   value_indices = confstringtoindices(value_indices)
