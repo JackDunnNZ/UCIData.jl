@@ -1,5 +1,6 @@
 using ConfParser
 using DataFrames
+using ZipFile
 
 TOL = 1e-8
 
@@ -103,7 +104,18 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
   dataset_path = joinpath(data_path, name_orig)
 
   if !isfile(dataset_path)
-    download(data_url, dataset_path)
+    #used for when the data_url is empty thus implying it is a zip file
+    if isempty(data_url)
+      unzipped_dir = ZipFile.Reader("/Users/arisp/Desktop/$name.zip")
+      for file in unzipped_dir.files
+        if file.name[end-4:end] == ".data" || file.name[end-3:end] == ".csv" || file.name[end-3:end] == ".txt"
+          outfile = open(dataset_path, "w")
+          write(outfile, readall(file))
+        end
+      end
+    else
+      download(data_url, dataset_path)
+    end
   end
 
   # Any time we need custom behavior, call the custom.jl file.
