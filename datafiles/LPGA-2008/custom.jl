@@ -6,7 +6,7 @@ dataset_path = "datafiles/LPGA-2008/LPGA-2008.data.orig"
 f = open("$dataset_path.custom", "w")
 for line in readlines(dataset_path)
   line = line[30:end]
-  line = strip(line)
+  line = lstrip(line)
   write(f, line)
 end
 close(f)

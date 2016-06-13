@@ -6,7 +6,7 @@ dataset_path = "datafiles/airline-costs/airline-costs.data.orig"
 f = open("$dataset_path.custom", "w")
 for line in readlines(dataset_path)
   line = line[25:end]
-  line = strip(line)
+  line = lstrip(line)
   write(f, line)
 end
 close(f)
