@@ -26,27 +26,14 @@ Use the following command from the root folder:
 
 This processes all data folders in the `datafiles` folder. The output directory is the `processed` folder.
 
-It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files
+It is possible to normalize the data to [0, 1]
 
-    usage: runconvert.jl [-n] [-c CLASS_SIZE] [-m MIN_SIZE] [-h]
+    usage: runconvert.jl [-n] [-h]
 
     optional arguments:
       -n, --normalize       set if the data is to be normalized
-      -c, --class_size CLASS_SIZE
-                            optional: the number of classes to use in
-                            output datasets. Leave as zero to include all
-                            classes. (type: Int64, default: 0)
-      -m, --min_size MIN_SIZE
-                            optional: the minimum number of datapoints for
-                            each class. If any class has fewer than this,
-                            no file will be created. (type: Int64,
-                            default: 0)
 
-For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
-
-If `class_size` is set to `1`, then the behavior is slightly different. One file will be output for each class in the dataset, in which the respective class will take value `1` while all other classes take value `0`. These output files are then suited for the task of distinguishing a single class from all others.
-
-`min_size` when set ensures that no output files are created where any class has fewer than this number of observations. For example, setting this to 10 will ensure that each class present in the output files has more than 10 observations.
+For example, if you wanted to normalize the data you would run `julia convert.jl -n
 
 #### From Julia
 
@@ -56,20 +43,21 @@ First include the file:
 
 Then use the `processalldirs` function to run the process:
 
-    processalldirs(normalize::Bool=false, class_size::Int=0)
+    processalldirs(normalize::Bool=false)
 
 ## Guide to config files
 
 Due to the varying nature of the datasets in the repository, the script needs to behave differently for different datasets. This is achieved using the `config.ini` files present in each dataset folder. An example of this file is:
 
     [info]
-    name = mammographic-mass.data
-    info_url = https://archive.ics.uci.edu/ml/datasets/Mammographic+Mass
-    data_url = https://archive.ics.uci.edu/ml/machine-learning-databases/mammographic-masses/mammographic_masses.data
-    class_index = 6
+    name = automobile-symboling.data
+    info_url = https://archive.ics.uci.edu/ml/datasets/Automobile
+    data_url = https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data
+    y_index = 1
     id_indices =
-    value_indices = 1,2,3,4,5
-    categoric_indices = 3,4
+    value_indices = 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
+    categoric_indices = 3,4,5,7,8,9,15,18
+    make_integer_indeces = 6,16
     separator = comma
     header_lines = 0
 
@@ -81,19 +69,19 @@ This is an arbitrary choice for describing the data in the config file. It must 
 
 ##### name
 
-The name of the dataset that will be produced by the script. The convention used is the name of the dataset on the UCI info page, converted to lower case with spaces replaced with hyphens. The suffix `.data` is then added. This name (before adding `.data`) is also used for the name of the containing folder.
+The name of the dataset that will be produced by the script. The convention used is the name of the dataset on the UCI info page, converted to lower case with spaces replaced with hyphens. The suffix `.data` is then added. This name (before adding `.data`) is also used for the name of the containing folder. For zip files the name must be the name of the zip file without the '.zip' extension.
 
 ##### info_url
 
-Contains the link to the UCI information page for the dataset, allowing for the dataset to be traced back to its source.
+Contains the link to the UCI information page for the dataset, allowing the dataset to be traced back to its source.
 
 ##### data_url
 
-Contains the link to the dataset itself on UCI. To avoid checking in the datasets to Github, the script instead downloads any missing datafiles using these links when it runs.
+Contains the link to the dataset itself on UCI. To avoid checking in the datasets to Github, the script instead downloads any missing datafiles using these links when it runs. If it is a zip file, contains the link of the zip file.
 
-##### class_index
+##### y_index
 
-A single integer indicating the index (1-based) of the class variable in the dataset (what we want to predict).
+A single integer indicating the index (1-based) of the variable in the dataset we want to predict.
 
 ##### id_indices
 
@@ -105,7 +93,11 @@ One or more integers (separated by commas and no spaces i.e. 1,2,3) that indicat
 
 ##### categoric_indices
 
-A subset of the integers specified in `value_indices` that indicate those data values that are categorical/nominal in nature.
+A subset of the integers specified in `value_indices` that indicate the data values that are categorical/nominal in nature.
+
+##### make_integer_indeces
+
+A subset of hte integers specified in `value_indices` that indicate any data values that need to be converted from string form into integer form. For example, the number of cylinder in a car might need to be converted from the string `eight` to the integer 8.
 
 ##### separator
 
@@ -118,10 +110,6 @@ An integer number of header lines in the dataset before the values are reached.
 ## TODO
 
 - Add more datasets!
-
-### Missing datasets
-
-`missing.csv` contains information on the datasets that haven't yet been added.
 
 ## Contributing
 
