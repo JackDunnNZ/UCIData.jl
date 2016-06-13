@@ -103,26 +103,24 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   name_orig = "$name.orig"
   dataset_path = joinpath(data_path, name_orig)
-
+  
   if !isfile(dataset_path)
     #used for when the data_url ends in .zip
-    if data_url[end-3:end] == ".zip"
+    if splitext(data_url)[end] == ".zip"
       zipped_dir = Requests.get(data_url)
-      mkdir("temp")
-      save(zipped_dir, "temp/$name.zip")
-      unzipped_dir = ZipFile.Reader("temp/$name.zip")
+      save(zipped_dir, "datafiles/$name/$name.zip")
+      unzipped_dir = ZipFile.Reader("datafiles/$name/$name.zip")
       for file in unzipped_dir.files
-        if file.name[end-4:end] == ".data" || file.name[end-3:end] == ".csv" || file.name[end-3:end] == ".txt"
+        if splitext(file.name)[end] in [".data", ".csv", ".txt"]
           outfile = open(dataset_path, "w")
           write(outfile, readall(file))
         end
       end
-      rm("temp", recursive = true)
     #used when the data_url does not end in zip
     else
       download(data_url, dataset_path)
     end
-  end
+  end        
 
   # Any time we need custom behavior, call the custom.jl file.
   # This is for when the UCI file is abnormal.
