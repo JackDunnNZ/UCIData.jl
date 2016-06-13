@@ -1,0 +1,13 @@
+lread : continuous
+lwrite : continuous
+scall : continuous
+sread : continuous
+swrite : continuous
+fork : continuous
+exec : continuous
+rchar : continuous
+wchar : continuous
+runqsz : continuous
+freemem : continuous
+freeswap : continuous
+usr : continuous

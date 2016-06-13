@@ -103,17 +103,41 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   name_orig = "$name.orig"
   dataset_path = joinpath(data_path, name_orig)
-  
+
   if !isfile(dataset_path)
+    folder_name = splitdir(data_path)[end]
     #used for when the data_url ends in .zip
     if splitext(data_url)[end] == ".zip"
       zipped_dir = Requests.get(data_url)
-      save(zipped_dir, "datafiles/$name/$name.zip")
-      unzipped_dir = ZipFile.Reader("datafiles/$name/$name.zip")
+      save(zipped_dir, "datafiles/$folder_name/$name.zip")
+      unzipped_dir = ZipFile.Reader("datafiles/$folder_name/$name.zip")
       for file in unzipped_dir.files
         if splitext(file.name)[end] in [".data", ".csv", ".txt"]
           outfile = open(dataset_path, "w")
           write(outfile, readall(file))
+        end
+      end
+    #used when the data_url ends in .tgz or .tar.gz
+    elseif splitext(data_url)[end] in [".tgz", ".gz"]
+      if splitext(data_url)[end] == ".tgz"
+        zipped_dir = Requests.get(data_url)
+        save(zipped_dir, "datafiles/$folder_name/$name.tgz")
+        contents_path = "datafiles/$folder_name/contents"
+        isdir(contents_path) || mkdir(contents_path)
+        run(`tar -xf datafiles/$folder_name/$name.tgz -C datafiles/$folder_name/contents --strip-components=1`)
+      else
+        zipped_dir = Requests.get(data_url)
+        save(zipped_dir, "datafiles/$folder_name/$name.tar.gz")
+        contents_path = "datafiles/$folder_name/contents"
+        isdir(contents_path) || mkdir(contents_path)
+        run(`tar -xf datafiles/$folder_name/$name.tar.gz -C datafiles/$folder_name/contents --strip-components=1`)
+      end
+      for file in readdir("datafiles/$folder_name/contents")
+        if splitext(file)[end] in [".data", ".csv", ".txt"]
+          if splitext(splitext(file)[1])[1] == "$name"
+            outfile = open(dataset_path, "w")
+            write(outfile, readall("datafiles/$folder_name/contents/$file"))
+          end
         end
       end
     #used when the data_url does not end in zip
