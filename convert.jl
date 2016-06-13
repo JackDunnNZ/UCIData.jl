@@ -140,6 +140,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
             outfile = open(dataset_path, "w")
             read = readall("datafiles/$folder_name/contents/$file")
             write(outfile, read)
+            close(outfile)
           end
         end
       end
