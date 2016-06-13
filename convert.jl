@@ -119,12 +119,14 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
       end
     #used when the data_url ends in .tgz or .tar.gz
     elseif splitext(data_url)[end] in [".tgz", ".gz"]
+      #.tgz files
       if splitext(data_url)[end] == ".tgz"
         zipped_dir = Requests.get(data_url)
         save(zipped_dir, "datafiles/$folder_name/$name.tgz")
         contents_path = "datafiles/$folder_name/contents"
         isdir(contents_path) || mkdir(contents_path)
         run(`tar -xf datafiles/$folder_name/$name.tgz -C datafiles/$folder_name/contents --strip-components=1`)
+      #.tar.gz files
       else
         zipped_dir = Requests.get(data_url)
         save(zipped_dir, "datafiles/$folder_name/$name.tar.gz")
@@ -136,7 +138,8 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
         if splitext(file)[end] in [".data", ".csv", ".txt"]
           if splitext(splitext(file)[1])[1] == "$name"
             outfile = open(dataset_path, "w")
-            write(outfile, readall("datafiles/$folder_name/contents/$file"))
+            read = readall("datafiles/$folder_name/contents/$file")
+            write(outfile, read)
           end
         end
       end
