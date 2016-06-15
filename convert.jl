@@ -148,7 +148,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
     else
       download(data_url, dataset_path)
     end
-  end        
+  end
 
   # Any time we need custom behavior, call the custom.jl file.
   # This is for when the UCI file is abnormal.
