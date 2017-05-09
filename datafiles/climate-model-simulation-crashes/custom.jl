@@ -3,7 +3,7 @@
 
 dataset_path = "datafiles/climate-model-simulation-crashes/climate-model-simulation-crashes.data.orig"
 
-data = readlines(`cat $dataset_path` |> `tr -s '[:blank:]' ','`)
+data = readlines(pipeline(`cat $dataset_path`, `tr -s '[:blank:]' ','`))
 
 f = open("$dataset_path.custom", "w")
 for line in data
