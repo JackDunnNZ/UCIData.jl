@@ -114,7 +114,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
       for file in unzipped_dir.files
         if splitext(file.name)[end] in [".data", ".csv", ".txt"]
           outfile = open(dataset_path, "w")
-          write(outfile, readall(file))
+          write(outfile, readstring(file))
         end
       end
     #used when the data_url ends in .tgz or .tar.gz
@@ -138,7 +138,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
         if splitext(file)[end] in [".data", ".csv", ".txt"]
           if splitext(splitext(file)[1])[1] == "$name"
             outfile = open(dataset_path, "w")
-            read = readall("datafiles/$folder_name/contents/$file")
+            read = readstring("datafiles/$folder_name/contents/$file")
             write(outfile, read)
             close(outfile)
           end
