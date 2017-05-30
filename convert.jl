@@ -199,12 +199,14 @@ end
 
 function processalldirs(normalize::Bool=false, class_size::Int=0,
                         min_size::Integer=0)
+  type_path = "classification"
+
   root_path = dirname(@__FILE__)
-  datafiles_path = joinpath(root_path, "datafiles")
+  datafiles_path = joinpath(root_path, "datafiles", type_path)
 
   normalize_path = normalize ? "normalized" : "original"
   class_size_path = class_size > 0 ? "$class_size" : "all"
-  processed_path = joinpath(root_path, "processed", normalize_path,
+  processed_path = joinpath(root_path, "processed", type_path, normalize_path,
                             class_size_path)
   mkpath(processed_path)
 
