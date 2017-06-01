@@ -9,7 +9,7 @@ Instead, the aim is to convert the datasets into a common format (CSV), where ea
 These datasets can then be read using DataFrames in Julia using:
 
     df = readtable(dataset, header=false)
-    
+
 This makes it easy to switch out datasets in ML problems, which is great when automating things!
 
 ## Converting to common format
@@ -21,42 +21,33 @@ The datasets are not checked in to git in order to minimise the size of the repo
 #### Command line
 
 Use the following command from the root folder:
-  
+
     julia runconvert.jl
 
 This processes all data folders in the `datafiles` folder. The output directory is the `processed` folder.
 
-It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files
+It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files (for classification only).
 
     usage: runconvert.jl [-n] [-c CLASS_SIZE] [-m MIN_SIZE] [-h]
 
     optional arguments:
       -n, --normalize       set if the data is to be normalized
-      -c, --class_size CLASS_SIZE
+      -c, --class_size CLASS_SIZE
                             optional: the number of classes to use in
                             output datasets. Leave as zero to include all
-                            classes. (type: Int64, default: 0)
-      -m, --min_size MIN_SIZE
+                            classes. Applies to classification only.
+                            (type: Int64, default: 0)
+      -m, --min_size MIN_SIZE
                             optional: the minimum number of datapoints for
                             each class. If any class has fewer than this,
-                            no file will be created. (type: Int64,
-                            default: 0)
+                            no file will be created. Applies to
+                            classification only. (type: Int64, default: 0)
 
 For example, if you wanted to normalize the data and were working with a binary classifier (and thus need two classes) you would run `julia convert.jl -n -c 2`
 
 If `class_size` is set to `1`, then the behavior is slightly different. One file will be output for each class in the dataset, in which the respective class will take value `1` while all other classes take value `0`. These output files are then suited for the task of distinguishing a single class from all others.
 
 `min_size` when set ensures that no output files are created where any class has fewer than this number of observations. For example, setting this to 10 will ensure that each class present in the output files has more than 10 observations.
-
-#### From Julia
-
-First include the file:
-
-    include("convert.jl")
-
-Then use the `processalldirs` function to run the process:
-
-    processalldirs(normalize::Bool=false, class_size::Int=0)
 
 ## Guide to config files
 
@@ -66,7 +57,7 @@ Due to the varying nature of the datasets in the repository, the script needs to
     name = mammographic-mass.data
     info_url = https://archive.ics.uci.edu/ml/datasets/Mammographic+Mass
     data_url = https://archive.ics.uci.edu/ml/machine-learning-databases/mammographic-masses/mammographic_masses.data
-    class_index = 6
+    target_index = 6
     id_indices =
     value_indices = 1,2,3,4,5
     categoric_indices = 3,4
@@ -85,15 +76,15 @@ The name of the dataset that will be produced by the script. The convention used
 
 ##### info_url
 
-Contains the link to the UCI information page for the dataset, allowing for the dataset to be traced back to its source.
+Contains the link to the UCI information page for the dataset, allowing the dataset to be traced back to its source.
 
 ##### data_url
 
 Contains the link to the dataset itself on UCI. To avoid checking in the datasets to Github, the script instead downloads any missing datafiles using these links when it runs.
 
-##### class_index
+##### target_index
 
-A single integer indicating the index (1-based) of the class variable in the dataset (what we want to predict).
+A single integer indicating the index (1-based) of the variable in the dataset we want to predict.
 
 ##### id_indices
 
@@ -114,14 +105,6 @@ The separator between values in the dataset. If this is left blank, the input da
 ##### header_lines
 
 An integer number of header lines in the dataset before the values are reached.
-
-## TODO
-
-- Add more datasets!
-
-### Missing datasets
-
-`missing.csv` contains information on the datasets that haven't yet been added.
 
 ## Contributing
 

@@ -1,6 +1,7 @@
 using Combinatorics
 using ConfParser
 using DataFrames
+using ZipFile
 
 TOL = 1e-8
 
@@ -35,8 +36,9 @@ function intorna(input::DataArray{Bool, 1})
   return output
 end
 
-function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool,
-                    class_size::Integer, min_size::Integer)
+function processdir(data_path::String, processed_path::String,
+                    problemtype::String, normalize::Bool, class_size::Int,
+                    min_size::Int)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
@@ -48,14 +50,14 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   name              = retrieve(conf, "info", "name")
   data_url          = retrieve(conf, "info", "data_url")
-  class_index       = retrieve(conf, "info", "class_index")
+  target_index      = retrieve(conf, "info", "target_index")
   id_indices        = retrieve(conf, "info", "id_indices")
   value_indices     = retrieve(conf, "info", "value_indices")
   categoric_indices = retrieve(conf, "info", "categoric_indices")
   separator         = retrieve(conf, "info", "separator")
   header_lines      = retrieve(conf, "info", "header_lines")
 
-  class_index = parse(Int, class_index)
+  target_index = parse(Int, target_index)
   header_lines = parse(Int, header_lines)
 
   id_indices = confstringtoindices(id_indices)
@@ -69,11 +71,35 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
     separator = isempty(separator) ? ' ' : separator[1]
   end
 
-  name_orig = "$name.orig"
-  dataset_path = joinpath(data_path, name_orig)
+  dataset_path = joinpath(data_path, "$name.orig")
 
   if !isfile(dataset_path)
-    download(data_url, dataset_path)
+    ext = splitext(data_url)[end]
+    download_path = joinpath(data_path, "$name$ext")
+    download(data_url, download_path)
+
+    if ext == ".zip"
+      unzipped_dir = ZipFile.Reader(download_path)
+      for file in unzipped_dir.files
+        if splitext(file.name)[end] in [".data", ".csv", ".txt"]
+          write(dataset_path, readstring(file))
+        end
+      end
+    elseif ext in [".tgz", ".gz"]
+      contents_path = "$download_path-contents"
+      isdir(contents_path) || mkdir(contents_path)
+      run(`tar -xf $download_path -C $contents_path --strip-components=1`)
+
+      for file in readdir(contents_path)
+        if splitext(file)[end] in [".data", ".csv", ".txt"]
+          if split(file, ".")[1] == "$name"
+            write(dataset_path, readstring(joinpath(contents_path, file)))
+          end
+        end
+      end
+    else
+      !isfile(dataset_path) && mv(download_path, dataset_path)
+    end
   end
 
   # Any time we need custom behavior, call the custom.jl file.
@@ -151,64 +177,72 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   output_path = joinpath(processed_path, name)
 
-  if class_size == -1
-    class_size = length(levels(pool(df[class_index])))
-  end
+  if problemtype == "classification"
+    if class_size == -1
+      class_size = length(levels(pool(df[target_index])))
+    end
 
-  if class_size == 0
-    output_df[:class] = df[class_index]
-    writetable(output_path, output_df, separator=',', header=false)
-  elseif class_size == 1
-    classes = levels(pool(df[class_index]))
-    # Skip the first class so we only output 1 files for 2 classes
-    if length(classes) == 2
-      classes = classes[2:end]
-    end
-    for (i, class) in enumerate(classes)
-      newclass = df[class_index] .== class
-      # Make sure the output has enough records
-      if sum(newclass) < min_size || sum(1 - newclass) < min_size
-        continue
+    if class_size == 0
+      output_df[:class] = df[target_index]
+      writetable(output_path, output_df, separator=',', header=false)
+    elseif class_size == 1
+      classes = levels(pool(df[target_index]))
+      # Skip the first class so we only output 1 files for 2 classes
+      if length(classes) == 2
+        classes = classes[2:end]
       end
-      output_df[:class] = intorna(newclass)
-      writetable("$output_path.$i", output_df, separator=',', header=false)
-    end
-  else
-    classes = levels(pool(df[class_index]))
-    output_df[:class] = 0
-    for comb in combinations(1:length(classes), class_size)
-      output_rows = Int64[]
-      output = true
-      for i in 1:class_size
-        rows = df[class_index] .== classes[comb[i]]
+      for (i, class) in enumerate(classes)
+        newclass = df[target_index] .== class
         # Make sure the output has enough records
-        if sum(rows) < min_size
-          output = false
-          break
+        if sum(newclass) < min_size || sum(1 - newclass) < min_size
+          continue
         end
-        append!(output_rows, find(rows))
-        output_df[rows, :class] = i - 1
+        output_df[:class] = intorna(newclass)
+        writetable("$output_path.$i", output_df, separator=',', header=false)
       end
-      if output
-        outputsuffix = join(comb, ".")
-        writetable("$output_path.$outputsuffix",
-                   output_df[output_rows, :], separator=',', header=false)
+    else
+      classes = levels(pool(df[target_index]))
+      output_df[:class] = 0
+      for comb in combinations(1:length(classes), class_size)
+        output_rows = Int64[]
+        output = true
+        for i in 1:class_size
+          rows = df[target_index] .== classes[comb[i]]
+          # Make sure the output has enough records
+          if sum(rows) < min_size
+            output = false
+            break
+          end
+          append!(output_rows, find(rows))
+          output_df[rows, :class] = i - 1
+        end
+        if output
+          outputsuffix = join(comb, ".")
+          writetable("$output_path.$outputsuffix",
+                     output_df[output_rows, :], separator=',', header=false)
+        end
       end
     end
+  elseif problemtype == "regression"
+    output_df[:class] = df[target_index]
+    writetable(output_path, output_df, separator=',', header=false)
   end
 end
 
-function processalldirs(normalize::Bool=false, class_size::Int=0,
-                        min_size::Integer=0)
-  type_path = "classification"
+function processalldirs(problemtype::String, normalize::Bool=false,
+                        class_size::Int=0, min_size::Int=0)
 
   root_path = dirname(@__FILE__)
-  datafiles_path = joinpath(root_path, "datafiles", type_path)
+  datafiles_path = joinpath(root_path, "datafiles", problemtype)
 
   normalize_path = normalize ? "normalized" : "original"
-  class_size_path = class_size > 0 ? "$class_size" : "all"
-  processed_path = joinpath(root_path, "processed", type_path, normalize_path,
-                            class_size_path)
+  processed_path = joinpath(root_path, "processed", problemtype, normalize_path)
+
+  if problemtype == "classification"
+    class_size_path = class_size > 0 ? "$class_size" : "all"
+    processed_path = joinpath(processed_path, class_size_path)
+  end
+
   mkpath(processed_path)
 
   for dir in readdir(datafiles_path)
@@ -217,6 +251,7 @@ function processalldirs(normalize::Bool=false, class_size::Int=0,
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, normalize, class_size, min_size)
+    processdir(data_path, processed_path, problemtype, normalize, class_size,
+               min_size)
   end
 end
