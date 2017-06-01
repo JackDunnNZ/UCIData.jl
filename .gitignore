@@ -1,4 +1,6 @@
-datafiles/*/*.orig*
+datafiles/**/*.*
+!**/config.ini
+!**/custom.jl
 
 processed/
 split/
