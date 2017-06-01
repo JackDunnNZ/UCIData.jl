@@ -48,14 +48,14 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   name              = retrieve(conf, "info", "name")
   data_url          = retrieve(conf, "info", "data_url")
-  y_index           = retrieve(conf, "info", "y_index")
+  target_index      = retrieve(conf, "info", "target_index")
   id_indices        = retrieve(conf, "info", "id_indices")
   value_indices     = retrieve(conf, "info", "value_indices")
   categoric_indices = retrieve(conf, "info", "categoric_indices")
   separator         = retrieve(conf, "info", "separator")
   header_lines      = retrieve(conf, "info", "header_lines")
 
-  y_index = parse(Int, y_index)
+  target_index = parse(Int, target_index)
   header_lines = parse(Int, header_lines)
 
   id_indices = confstringtoindices(id_indices)
@@ -193,7 +193,7 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
 
   output_path = joinpath(processed_path, name)
 
-  output_df[:class] = df[y_index]
+  output_df[:class] = df[target_index]
   writetable(output_path, output_df, separator=',', header=false)
 end
 

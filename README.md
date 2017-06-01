@@ -53,7 +53,7 @@ Due to the varying nature of the datasets in the repository, the script needs to
     name = automobile-symboling.data
     info_url = https://archive.ics.uci.edu/ml/datasets/Automobile
     data_url = https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data
-    y_index = 1
+    target_index = 1
     id_indices =
     value_indices = 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
     categoric_indices = 3,4,5,7,8,9,15,18
@@ -78,7 +78,7 @@ Contains the link to the UCI information page for the dataset, allowing the data
 
 Contains the link to the dataset itself on UCI. To avoid checking in the datasets to Github, the script instead downloads any missing datafiles using these links when it runs. If it is a zip file, contains the link of the zip file.
 
-##### y_index
+##### target_index
 
 A single integer indicating the index (1-based) of the variable in the dataset we want to predict.
 
