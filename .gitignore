@@ -1,4 +1,7 @@
-datafiles/*/*.orig*
+datafiles/**/*.*
+!**/config.ini
+!**/custom.jl
+!**/README.md
 
 processed/
 split/
