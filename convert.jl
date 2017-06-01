@@ -36,7 +36,8 @@ function intorna(input::DataArray{Bool, 1})
   return output
 end
 
-function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool)
+function processdir(data_path::AbstractString, processed_path::AbstractString, normalize::Bool,
+                    class_size::Integer, min_size::Integer)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
@@ -197,12 +198,17 @@ function processdir(data_path::AbstractString, processed_path::AbstractString, n
   writetable(output_path, output_df, separator=',', header=false)
 end
 
-function processalldirs(normalize::Bool=false)
+function processalldirs(normalize::Bool=false, class_size::Int=0,
+                        min_size::Integer=0)
+  type_path = "regression"
+
   root_path = dirname(@__FILE__)
-  datafiles_path = joinpath(root_path, "datafiles")
+  datafiles_path = joinpath(root_path, "datafiles", type_path)
 
   normalize_path = normalize ? "normalized" : "original"
-  processed_path = joinpath(root_path, "processed", normalize_path)
+  class_size_path = class_size > 0 ? "$class_size" : "all"
+  processed_path = joinpath(root_path, "processed", type_path, normalize_path,
+                            class_size_path)
   mkpath(processed_path)
 
   for dir in readdir(datafiles_path)
@@ -211,6 +217,6 @@ function processalldirs(normalize::Bool=false)
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, normalize)
+    processdir(data_path, processed_path, normalize, class_size, min_size)
   end
 end
