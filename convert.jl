@@ -196,8 +196,56 @@ function processdir(data_path::String, processed_path::String,
 
   output_path = joinpath(processed_path, name)
 
-  output_df[:class] = df[target_index]
-  writetable(output_path, output_df, separator=',', header=false)
+  if problemtype == "classification"
+    if class_size == -1
+      class_size = length(levels(pool(df[class_index])))
+    end
+
+    if class_size == 0
+      output_df[:class] = df[class_index]
+      writetable(output_path, output_df, separator=',', header=false)
+    elseif class_size == 1
+      classes = levels(pool(df[class_index]))
+      # Skip the first class so we only output 1 files for 2 classes
+      if length(classes) == 2
+        classes = classes[2:end]
+      end
+      for (i, class) in enumerate(classes)
+        newclass = df[class_index] .== class
+        # Make sure the output has enough records
+        if sum(newclass) < min_size || sum(1 - newclass) < min_size
+          continue
+        end
+        output_df[:class] = intorna(newclass)
+        writetable("$output_path.$i", output_df, separator=',', header=false)
+      end
+    else
+      classes = levels(pool(df[class_index]))
+      output_df[:class] = 0
+      for comb in combinations(1:length(classes), class_size)
+        output_rows = Int64[]
+        output = true
+        for i in 1:class_size
+          rows = df[class_index] .== classes[comb[i]]
+          # Make sure the output has enough records
+          if sum(rows) < min_size
+            output = false
+            break
+          end
+          append!(output_rows, find(rows))
+          output_df[rows, :class] = i - 1
+        end
+        if output
+          outputsuffix = join(comb, ".")
+          writetable("$output_path.$outputsuffix",
+                     output_df[output_rows, :], separator=',', header=false)
+        end
+      end
+    end
+  elseif problemtype == "regression"
+    output_df[:class] = df[target_index]
+    writetable(output_path, output_df, separator=',', header=false)
+  end
 end
 
 function processalldirs(problemtype::String, normalize::Bool=false,
