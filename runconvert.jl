@@ -11,7 +11,7 @@ function main()
   end
   parsed_args = parse_args(s)
   normalize = parsed_args["normalize"]
-  processalldirs(normalize)
+  processalldirs("regression", normalize)
 end
 
 main()
