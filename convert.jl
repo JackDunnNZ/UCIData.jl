@@ -2,7 +2,6 @@ using Combinatorics
 using ConfParser
 using DataFrames
 using ZipFile
-using Requests
 
 TOL = 1e-8
 
@@ -72,52 +71,34 @@ function processdir(data_path::String, processed_path::String,
     separator = isempty(separator) ? ' ' : separator[1]
   end
 
-  name_orig = "$name.orig"
-  dataset_path = joinpath(data_path, name_orig)
+  dataset_path = joinpath(data_path, "$name.orig")
 
   if !isfile(dataset_path)
-    folder_name = splitdir(data_path)[end]
-    #used for when the data_url ends in .zip
-    if splitext(data_url)[end] == ".zip"
-      zipped_dir = Requests.get(data_url)
-      save(zipped_dir, "datafiles/$folder_name/$name.zip")
-      unzipped_dir = ZipFile.Reader("datafiles/$folder_name/$name.zip")
+    ext = splitext(data_url)[end]
+    download_path = joinpath(data_path, "$name$ext")
+    download(data_url, dataset_path)
+
+    if ext == ".zip"
+      unzipped_dir = ZipFile.Reader(download_path)
       for file in unzipped_dir.files
         if splitext(file.name)[end] in [".data", ".csv", ".txt"]
-          outfile = open(dataset_path, "w")
-          write(outfile, readstring(file))
+          write(dataset_path, readstring(file))
         end
       end
-    #used when the data_url ends in .tgz or .tar.gz
-    elseif splitext(data_url)[end] in [".tgz", ".gz"]
-      #.tgz files
-      if splitext(data_url)[end] == ".tgz"
-        zipped_dir = Requests.get(data_url)
-        save(zipped_dir, "datafiles/$folder_name/$name.tgz")
-        contents_path = "datafiles/$folder_name/contents"
-        isdir(contents_path) || mkdir(contents_path)
-        run(`tar -xf datafiles/$folder_name/$name.tgz -C datafiles/$folder_name/contents --strip-components=1`)
-      #.tar.gz files
-      else
-        zipped_dir = Requests.get(data_url)
-        save(zipped_dir, "datafiles/$folder_name/$name.tar.gz")
-        contents_path = "datafiles/$folder_name/contents"
-        isdir(contents_path) || mkdir(contents_path)
-        run(`tar -xf datafiles/$folder_name/$name.tar.gz -C datafiles/$folder_name/contents --strip-components=1`)
-      end
-      for file in readdir("datafiles/$folder_name/contents")
+    elseif ext in [".tgz", ".gz"]
+      contents_path = "$download_path-contents"
+      isdir(contents_path) || mkdir(contents_path)
+      run(`tar -xf $download_path -C $contents_path --strip-components=1`)
+
+      for file in readdir(contents_path)
         if splitext(file)[end] in [".data", ".csv", ".txt"]
-          if splitext(splitext(file)[1])[1] == "$name"
-            outfile = open(dataset_path, "w")
-            read = readstring("datafiles/$folder_name/contents/$file")
-            write(outfile, read)
-            close(outfile)
+          if split(file, ".")[1] == "$name"
+            write(dataset_path, readstring(joinpath(contents_path, file)))
           end
         end
       end
-    #used when the data_url does not end in zip
     else
-      download(data_url, dataset_path)
+      !isfile(dataset_path) && mv(download_path, dataset_path)
     end
   end
 
