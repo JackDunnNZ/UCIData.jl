@@ -81,7 +81,7 @@ function processdir(data_path::String, processed_path::String,
     if ext == ".zip"
       unzipped_dir = ZipFile.Reader(download_path)
       for file in unzipped_dir.files
-        if basename(file.name) == name
+        if splitext(file.name)[end] in [".data", ".csv"]
           write(dataset_path, readstring(file))
         end
       end
@@ -91,7 +91,7 @@ function processdir(data_path::String, processed_path::String,
       run(`tar -xf $download_path -C $contents_path --strip-components=1`)
 
       for file in readdir(contents_path)
-        if file == name
+        if splitext(file)[end] in [".data", ".csv"]
           write(dataset_path, readstring(joinpath(contents_path, file)))
         end
       end

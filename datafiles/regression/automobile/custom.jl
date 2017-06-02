@@ -1,7 +1,7 @@
 # There are two columns with numbers in text form
 using EnglishText
 
-dataset_path = joinpath(dirname(@__FILE__), "automobile-symboling.data.orig")
+dataset_path = joinpath(dirname(@__FILE__), "automobile.data.orig")
 
 data = readcsv(dataset_path, header=false)
 for col in [6; 16]
