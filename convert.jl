@@ -222,6 +222,11 @@ function processdir(data_path::String, processed_path::String,
       end
     end
   elseif problemtype == "regression"
+    if normalize
+      min = minimum(df[target_index])
+      max = maximum(df[target_index])
+      df[target_index] = (df[target_index] - min) / (max - min)
+    end
     output_df[:class] = df[target_index]
     writetable(output_path, output_df, separator=',', header=false)
   end
