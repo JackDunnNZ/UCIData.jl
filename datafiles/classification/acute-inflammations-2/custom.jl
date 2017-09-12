@@ -6,7 +6,7 @@ import LegacyStrings
 dataset_path = joinpath(dirname(@__FILE__), "acute-inflammations-2.data.orig")
 
 f = open(dataset_path)
-data = LegacyStrings.utf16(read(f))
+data = LegacyStrings.utf16(read(f)[3:end])
 close(f)
 
 data = replace(data, ",", ".")
