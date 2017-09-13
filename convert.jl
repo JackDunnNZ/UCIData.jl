@@ -254,7 +254,10 @@ function processalldirs(problemtype::String, normalize::Bool=false, keepcat::Boo
   datafiles_path = joinpath(root_path, "datafiles", problemtype)
 
   normalize_path = normalize ? "normalized" : "original"
-  processed_path = joinpath(root_path, "processed", problemtype, normalize_path)
+  categoric_path = keepcat ? "_categoric" : ""
+  comb_path = "$(normalize_path)$(categoric_path)"
+
+  processed_path = joinpath(root_path, "processed", problemtype, comb_path)
 
   if problemtype == "classification"
     class_size_path = class_size > 0 ? "$class_size" : "all"
