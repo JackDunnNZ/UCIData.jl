@@ -32,6 +32,8 @@ It is possible to normalize the data to [0, 1], and/or to limit the number of cl
 
     optional arguments:
       -n, --normalize       set if the data is to be normalized
+      -k, --keepcat         optional: categorical coding C1, C2, etc.. Do
+                            not dummify.
       -c, --class_size CLASS_SIZE
                             optional: the number of classes to use in
                             output datasets. Leave as zero to include all

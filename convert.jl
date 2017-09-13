@@ -37,8 +37,8 @@ function intorna(input::DataArray{Bool, 1})
 end
 
 function processdir(data_path::String, processed_path::String,
-                    problemtype::String, normalize::Bool, class_size::Int,
-                    min_size::Int)
+                    problemtype::String, normalize::Bool, keepcat::Bool, 
+                    class_size::Int, min_size::Int)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
@@ -134,13 +134,23 @@ function processdir(data_path::String, processed_path::String,
   # Construct output values
   index = 2
   for i in value_indices
-    # Replace categoric variables with binaries
     if i in categoric_indices
       categories = levels(pool(df[i]))
       n = length(categories)
-      for j in 2:n
-        output_df[index] = intorna(df[i] .== categories[j])
+      # Keep categorical variables, map to C1, C2, etc.
+      if keepcat
+        mymap = Dict{Any,AbstractString}()
+        for j in 1:n
+          mymap[categories[j]] = string('C', j)
+        end
+        output_df[index] = map(x->mymap[x], collect(df[i]))
         index += 1
+      else 
+      # Replace categoric variables with binaries
+        for j in 2:n
+          output_df[index] = intorna(df[i] .== categories[j])
+          index += 1
+        end
       end
     else
       output_df[index] = df[i]
@@ -152,24 +162,28 @@ function processdir(data_path::String, processed_path::String,
     mins = colwise(minimum, output_df[2:end])
     maxs = colwise(maximum, output_df[2:end])
     for j in 2:size(output_df, 2)
-      new_col = PooledDataArray(Float64, num_rows)
+      # process the column only when it's numeric
+      # leave alone when keepcat=true gives a string
+      if !isa(output_df[j], DataArray{String})
+        new_col = PooledDataArray(Float64, num_rows)
 
-      denom = maxs[j - 1][1] - mins[j - 1][1]
-      # If max and min are the same, this column is all the same value
-      # We can just set denom to 1 and everything comes out as zero
-      if denom < TOL
-        for i in 1:size(output_df, 1)
-          new_col[i] = isna(output_df[i, j]) ? NA : 0
+        denom = maxs[j - 1][1] - mins[j - 1][1]
+        # If max and min are the same, this column is all the same value
+        # We can just set denom to 1 and everything comes out as zero
+        if denom < TOL
+          for i in 1:size(output_df, 1)
+            new_col[i] = isna(output_df[i, j]) ? NA : 0
+          end
+        else
+          for i in 1:size(output_df, 1)
+            value = output_df[i, j] - mins[j - 1][1]
+            value = value < TOL ? 0 : value
+            new_col[i] = value / denom
+          end
         end
-      else
-        for i in 1:size(output_df, 1)
-          value = output_df[i, j] - mins[j - 1][1]
-          value = value < TOL ? 0 : value
-          new_col[i] = value / denom
-        end
-      end
 
       output_df[j] = new_col
+      end     
     end
   end
 
@@ -201,6 +215,7 @@ function processdir(data_path::String, processed_path::String,
     else
       classes = levels(pool(df[target_index]))
       output_df[:class] = 0
+
       for comb in combinations(1:length(classes), class_size)
         output_rows = Int64[]
         output = true
@@ -232,14 +247,17 @@ function processdir(data_path::String, processed_path::String,
   end
 end
 
-function processalldirs(problemtype::String, normalize::Bool=false,
+function processalldirs(problemtype::String, normalize::Bool=false, keepcat::Bool=false, 
                         class_size::Int=0, min_size::Int=0)
 
   root_path = dirname(@__FILE__)
   datafiles_path = joinpath(root_path, "datafiles", problemtype)
 
   normalize_path = normalize ? "normalized" : "original"
-  processed_path = joinpath(root_path, "processed", problemtype, normalize_path)
+  categoric_path = keepcat ? "_categoric" : ""
+  comb_path = "$(normalize_path)$(categoric_path)"
+
+  processed_path = joinpath(root_path, "processed", problemtype, comb_path)
 
   if problemtype == "classification"
     class_size_path = class_size > 0 ? "$class_size" : "all"
@@ -254,7 +272,7 @@ function processalldirs(problemtype::String, normalize::Bool=false,
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, problemtype, normalize, class_size,
+    processdir(data_path, processed_path, problemtype, normalize, keepcat, class_size,
                min_size)
   end
 end
