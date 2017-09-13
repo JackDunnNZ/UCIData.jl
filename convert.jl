@@ -164,7 +164,7 @@ function processdir(data_path::String, processed_path::String,
     for j in 2:size(output_df, 2)
       # process the column only when it's numeric
       # leave alone when keepcat=true gives a string
-      if typeof(output_df[j][1]) != String
+      if !isa(output_df[j], DataArray{String})
         new_col = PooledDataArray(Float64, num_rows)
 
         denom = maxs[j - 1][1] - mins[j - 1][1]
