@@ -7,6 +7,6 @@ f = open("$dataset_path.custom", "w")
 for line in readlines(dataset_path)
   line = line[21:end]
   line = lstrip(line)
-  write(f, line)
+  write(f, "$line\n")
 end
 close(f)

@@ -11,7 +11,7 @@ f = open("$dataset_path.custom", "w")
 for (i, line) in enumerate(data)
   line = rstrip(line)
   if i == 522
-    write(f, "$line$(data[i+1])")
+    write(f, "$line$(rstrip(data[i+1]))\n")
   elseif i != 523
     write(f, "$line\n")
   end

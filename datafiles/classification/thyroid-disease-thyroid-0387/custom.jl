@@ -15,3 +15,7 @@ for line in data
   write(f, line)
 end
 close(f)
+
+
+data = readstring(dataset_path)
+write("$dataset_path.custom", replace(replace(data, "[", ","), "]", ""))
