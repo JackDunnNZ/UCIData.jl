@@ -37,7 +37,7 @@ function intorna(input::DataArray{Bool, 1})
 end
 
 function processdir(data_path::String, processed_path::String,
-                    problemtype::String, normalize::Bool, keepcat::Bool, 
+                    problemtype::String, normalize::Bool, keepcat::Bool,
                     class_size::Int, min_size::Int)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
@@ -81,7 +81,7 @@ function processdir(data_path::String, processed_path::String,
     if ext == ".zip"
       unzipped_dir = ZipFile.Reader(download_path)
       for file in unzipped_dir.files
-        if splitext(file.name)[end] in [".data", ".csv"]
+        if splitext(file.name)[end] in [".data", ".csv", ".txt"]
           write(dataset_path, readstring(file))
         end
       end
@@ -91,7 +91,7 @@ function processdir(data_path::String, processed_path::String,
       run(`tar -xf $download_path -C $contents_path --strip-components=1`)
 
       for file in readdir(contents_path)
-        if splitext(file)[end] in [".data", ".csv"]
+        if splitext(file)[end] in [".data", ".csv", ".txt"]
           write(dataset_path, readstring(joinpath(contents_path, file)))
         end
       end
@@ -145,7 +145,7 @@ function processdir(data_path::String, processed_path::String,
         end
         output_df[index] = map(x->mymap[x], collect(df[i]))
         index += 1
-      else 
+      else
       # Replace categoric variables with binaries
         for j in 2:n
           output_df[index] = intorna(df[i] .== categories[j])
@@ -183,7 +183,7 @@ function processdir(data_path::String, processed_path::String,
         end
 
       output_df[j] = new_col
-      end     
+      end
     end
   end
 
@@ -247,7 +247,7 @@ function processdir(data_path::String, processed_path::String,
   end
 end
 
-function processalldirs(problemtype::String, normalize::Bool=false, keepcat::Bool=false, 
+function processalldirs(problemtype::String, normalize::Bool=false, keepcat::Bool=false,
                         class_size::Int=0, min_size::Int=0)
 
   root_path = dirname(@__FILE__)
