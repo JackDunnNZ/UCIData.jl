@@ -5,16 +5,16 @@ include("convert.jl")
 function main()
   s = ArgParseSettings()
   @add_arg_table s begin
-    "--keepna"
-      help = "optimal: whether to keep NAs or remove the rows. "
+    "--categoric", "-c"
+      help = "optional: keep categoric features as strings."
       action = :store_true
-    "--keepcat", "-k"
-      help = "optional: categorical coding C1, C2, etc.. Do not dummify. "
+    "--missing", "-m"
+      help = "optimal: whether to keep NAs or remove the rows."
       action = :store_true
   end
   parsed_args = parse_args(s)
-  keepna = parsed_args["keepna"]
-  keepcat = parsed_args["keepcat"]
+  keepcat = parsed_args["categoric"]
+  keepna = parsed_args["missing"]
 
   processalldirs("classification", keepcat, keepna)
   processalldirs("regression", keepcat, keepna)
