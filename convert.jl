@@ -128,10 +128,9 @@ function processdir(data_path::String, processed_path::String,
   )
 
   if !keepna
-    for i in 1:size(df, 2)
-      deleterows!(df,find(isna(df[:, i])))
-    end
+    completecases!(df)
   end
+
   num_rows = size(df, 1)
 
   if num_rows == 0
