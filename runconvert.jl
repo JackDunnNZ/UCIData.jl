@@ -8,6 +8,9 @@ function main()
     "--normalize", "-n"
       help = "set if the data is to be normalized"
       action = :store_true
+    "--keepna"
+      help = "optimal: whether to keep NAs or remove the rows. "
+      action = :store_true
     "--keepcat", "-k"
       help = "optional: categorical coding C1, C2, etc.. Do not dummify. "
       action = :store_true
@@ -27,12 +30,13 @@ function main()
   end
   parsed_args = parse_args(s)
   normalize = parsed_args["normalize"]
+  keepna = parsed_args["keepna"]
   keepcat = parsed_args["keepcat"]
   class_size = parsed_args["class_size"]
   min_size = parsed_args["min_size"]
 
-  processalldirs("classification", normalize, keepcat, class_size, min_size)
-  processalldirs("regression", normalize, keepcat)
+  processalldirs("classification", normalize, keepcat, keepna, class_size, min_size)
+  processalldirs("regression", normalize, keepcat, keepna)
 end
 
 main()
