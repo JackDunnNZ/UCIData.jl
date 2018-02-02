@@ -26,15 +26,13 @@ Use the following command from the root folder:
 
 This processes all data folders in the `datafiles` folder. The output directory is the `processed` folder.
 
-It is possible to normalize the data to [0, 1], and/or to limit the number of classes in the output files (for classification only).
-
     usage: runconvert.jl [-mc]
 
     optional arguments:
       -m, --missing           whether to keep NAs or remove the rows
       -c, --categoric         keep categoric features as strings
 
-For example, if you wanted to keep the missing data but onehot encode categoric features, you can run `julia convert.jl -m`
+For example, if you wanted to keep the missing data as NAs but onehot encode categoric features, you can run `julia convert.jl -m`
 
 ## Guide to config files
 
