@@ -46,8 +46,8 @@ function get_extrema(dataarray::DataArray)
 end
 
 function processdir(data_path::String, processed_path::String,
-                    problemtype::String, normalize::Bool, keepcat::Bool,
-                    keepna::Bool, class_size::Int, min_size::Int)
+                    problemtype::String, keepcat::Bool,
+                    keepna::Bool)
   config_path = ascii(joinpath(data_path, "config.ini"))
   if !isfile(config_path)
     return
@@ -128,7 +128,6 @@ function processdir(data_path::String, processed_path::String,
   )
 
   if !keepna
-  # Delete rows with NA values. This is needed by normalize
     for i in 1:size(df, 2)
       deleterows!(df,find(isna(df[:, i])))
     end
@@ -146,19 +145,13 @@ function processdir(data_path::String, processed_path::String,
   index = 2
   for i in value_indices
     if i in categoric_indices
-      categories = levels(pool(df[i]))
-      n = length(categories)
-      # Keep categorical variables, map to C1, C2, etc.
       if keepcat
-        mymap = Dict{Any,AbstractString}()
-        for j in 1:n
-          mymap[categories[j]] = string('C', j)
-        end
-        output_df[index] = map(x->isna(x)? NA : mymap[x], df[i])
+        output_df[index] = map(x->isna(x)? NA : string(x), df[i])
         index += 1
       else
-      # Replace categoric variables with binaries
-        for j in 2:n
+        # Replace categoric variables with binaries
+        categories = levels(pool(df[i]))
+        for j in 2:length(categories)
           output_df[index] = intorna(df[i] .== categories[j])
           index += 1
         end
@@ -169,116 +162,28 @@ function processdir(data_path::String, processed_path::String,
     end
   end
 
-  if normalize
-
-    for j in 2:size(output_df, 2)
-      # process the column only when it's numeric
-      # leave alone when keepcat=true gives a string
-      @show typeof(output_df[j])
-      if !isa(output_df[j], DataArray{String}) & !isa(output_df[j], DataArray{Any})
-        min, max = get_extrema(output_df[j])
-
-        new_col = PooledDataArray(Float64, num_rows)
-
-        denom = max - min
-        # If max and min are the same, this column is all the same value
-        # We can just set denom to 1 and everything comes out as zero
-        for i in 1:size(output_df, 1)
-          if isna(output_df[i, j])
-            new_col[i] = NA
-          else
-            if denom < TOL
-              new_col[i] = 0
-            else
-              value = output_df[i, j] - min[1]
-              value = value < TOL ? 0 : value
-              new_col[i] = value / denom
-            end
-          end
-        end
-      output_df[j] = new_col
-      end
-    end
-  end
-
   output_path = joinpath(processed_path, name)
 
   if problemtype == "classification"
-    if class_size == -1
-      class_size = length(levels(pool(df[target_index])))
-    end
-
-    if class_size == 0
-      output_df[:class] = df[target_index]
-      writetable(output_path, output_df, separator=',', header=false)
-    elseif class_size == 1
-      classes = levels(pool(df[target_index]))
-      # Skip the first class so we only output 1 files for 2 classes
-      if length(classes) == 2
-        classes = classes[2:end]
-      end
-      for (i, class) in enumerate(classes)
-        newclass = df[target_index] .== class
-        # Make sure the output has enough records
-        if sum(newclass) < min_size || sum(1 - newclass) < min_size
-          continue
-        end
-        output_df[:class] = intorna(newclass)
-        writetable("$output_path.$i", output_df, separator=',', header=false)
-      end
-    else
-      classes = levels(pool(df[target_index]))
-      output_df[:class] = 0
-
-      for comb in combinations(1:length(classes), class_size)
-        output_rows = Int64[]
-        output = true
-        for i in 1:class_size
-          rows = df[target_index] .== classes[comb[i]]
-          # Make sure the output has enough records
-          if sum(rows) < min_size
-            output = false
-            break
-          end
-          append!(output_rows, find(rows))
-          output_df[rows, :class] = i - 1
-        end
-        if output
-          outputsuffix = join(comb, ".")
-          writetable("$output_path.$outputsuffix",
-                     output_df[output_rows, :], separator=',', header=false)
-        end
-      end
-    end
+    output_df[:target] = string.(df[target_index])
   elseif problemtype == "regression"
-    if normalize
-      min, max = get_extrema(df[target_index])
-      df[target_index] = (df[target_index] - min) / (max - min)
-    end
-    output_df[:class] = df[target_index]
-    writetable(output_path, output_df, separator=',', header=false)
+    output_df[:target] = df[target_index]
   end
+  writetable(output_path, output_df, separator=',', header=false)
 end
 
-function processalldirs(problemtype::String, normalize::Bool=false,
-                        keepcat::Bool=false, keepna::Bool=false,
-                        class_size::Int=0, min_size::Int=0)
+function processalldirs(problemtype::String, keepcat::Bool=false,
+                        keepna::Bool=false)
 
-  root_path = dirname(@__FILE__)
+  root_path = @__DIR__
   datafiles_path = joinpath(root_path, "datafiles", problemtype)
 
-  normalize_path = normalize ? "normalized" : "original"
-  categoric_path = keepcat ? "_categoric" : ""
-  na_path = keepna ? "_keepna" : ""
+  categoric_path = keepcat ? "categoric" : "onehot"
+  na_path = keepna ? "_missing" : ""
 
-  comb_path = "$(normalize_path)$(categoric_path)$(na_path)"
+  comb_path = "$(categoric_path)$(na_path)"
 
   processed_path = joinpath(root_path, "processed", problemtype, comb_path)
-
-  if problemtype == "classification"
-    class_size_path = class_size > 0 ? "$class_size" : "all"
-    processed_path = joinpath(processed_path, class_size_path)
-  end
 
   mkpath(processed_path)
 
@@ -288,7 +193,6 @@ function processalldirs(problemtype::String, normalize::Bool=false,
       continue
     end
     println("Processing $dir")
-    processdir(data_path, processed_path, problemtype, normalize, keepcat,
-               keepna, class_size, min_size)
+    processdir(data_path, processed_path, problemtype, keepcat, keepna)
   end
 end
