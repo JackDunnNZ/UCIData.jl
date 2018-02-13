@@ -9,7 +9,7 @@ function main()
       help = "optional: keep categoric features as strings."
       action = :store_true
     "--missing", "-m"
-      help = "optimal: whether to keep NAs or remove the rows."
+      help = "optional: keep rows with missing values."
       action = :store_true
   end
   parsed_args = parse_args(s)
