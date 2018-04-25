@@ -8,7 +8,9 @@ Instead, the aim is to convert the datasets into a common format (CSV), where ea
 
 These datasets can then be read using DataFrames in Julia using:
 
-    df = readtable(dataset, header=false)
+    df = readtable(dataset, header=true)
+
+The column names start with `C` or `N`, indicating categoric or numeric variables. 
 
 This makes it easy to switch out datasets in ML problems, which is great when automating things!
 
@@ -81,7 +83,7 @@ One or more integers (separated by commas and no spaces i.e. 1,2,3) that indicat
 
 ##### categoric_indices
 
-A subset of the integers specified in `value_indices` that indicate those data values that are categorical/nominal in nature.
+A subset of the integers specified in `value_indices` that indicate those data values that are categorical/numeric in nature.
 
 ##### separator
 
