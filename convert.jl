@@ -138,7 +138,9 @@ function processdir(data_path::String, processed_path::String,
   end
 
   output_df = DataFrame()
+  output_names = Vector{Symbol}()
   output_df[:id] = [makeid(df, i, id_indices) for i in 1:size(df, 1)]
+  push!(output_names, :id)
 
   # Construct output values
   index = 2
@@ -146,21 +148,26 @@ function processdir(data_path::String, processed_path::String,
     if i in categoric_indices
       if keepcat
         output_df[index] = map(x->isna(x)? NA : string(x), df[i])
+        push!(output_names, convert(Symbol, string("C", index - 1)))
         index += 1
       else
         # Replace categoric variables with binaries
         categories = levels(pool(df[i]))
         for j in 2:length(categories)
           output_df[index] = intorna(df[i] .== categories[j])
+          push!(output_names, convert(Symbol, string("N", index - 1)))
           index += 1
         end
       end
     else
       output_df[index] = df[i]
+      push!(output_names, convert(Symbol, string("N", index - 1)))
       index += 1
     end
   end
 
+  # Naming the output_df with categoric or numeric
+  names!(output_df, output_names)
   output_path = joinpath(processed_path, name)
 
   if problemtype == "classification"
@@ -168,7 +175,7 @@ function processdir(data_path::String, processed_path::String,
   elseif problemtype == "regression"
     output_df[:target] = df[target_index]
   end
-  writetable(output_path, output_df, separator=',', header=false)
+  writetable(output_path, output_df, separator=',', header=true)
 end
 
 function processalldirs(problemtype::String, keepcat::Bool=false,
