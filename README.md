@@ -6,11 +6,16 @@ Instead, the aim is to convert the datasets into a common format (CSV), where ea
 
     ID,attribute_1,attribute_2,...,attribute_n,class
 
-These datasets can then be read using DataFrames in Julia using:
+The attribute header names start with `C` or `N`, indicating categoric or numeric variables. 
+
+These datasets can then be read using `DataFrames` in Julia using the following, with categoric columns pooled into `PooledDataArray` type:
 
     df = readtable(dataset, header=true)
-
-The column names start with `C` or `N`, indicating categoric or numeric variables. 
+    for name in names(df)
+      if string(name)[1] == 'C'
+        pool!(df, name)
+      end
+    end
 
 This makes it easy to switch out datasets in ML problems, which is great when automating things!
 
