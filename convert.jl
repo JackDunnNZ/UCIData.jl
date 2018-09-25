@@ -1,5 +1,6 @@
 using Combinatorics
 using ConfParser
+using DataArrays
 using DataFrames
 using ZipFile
 
