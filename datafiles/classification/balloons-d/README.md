@@ -1,1 +1,0 @@
-Balloons is four datasets representing different conditions of an experiment. This is case (d): small-yellow+adult-stretch.data Inflated is true if (color=yellow and size = small) or (age=adult and act=stretch)
