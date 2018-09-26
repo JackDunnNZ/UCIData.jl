@@ -2,6 +2,7 @@
 language: julia
 env:
   - DATADEPS_ALWAY_ACCEPT: true
+  - DATADEPS_ALWAYS_ACCEPT: true
 os:
   - linux
   - osx
