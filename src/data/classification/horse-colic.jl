@@ -10,7 +10,7 @@ register(DataDep(
         target_index=24,
         feature_indices=1:22,
         categoric_indices=[7:9; 11:12; 15; 17:18; 21],
-        separator=' ',
+        delim=' ',
     )
   end),
 ))

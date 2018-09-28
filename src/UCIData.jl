@@ -4,6 +4,7 @@ module UCIData
 import CSV
 using DataDeps
 using DataFrames
+using DelimitedFiles
 import LegacyStrings
 
 
@@ -16,10 +17,10 @@ include("convert.jl")
 function dataset(datasetname)
   dataset_path = @datadep_str datasetname
 
-  df = readtable("$dataset_path/data.csv", header=true)
+  df = CSV.File("$dataset_path/data.csv", header=true) |> DataFrame
   for name in names(df)
     if string(name)[1] == 'C'
-      pool!(df, name)
+      categorical!(df, name)
     end
   end
 

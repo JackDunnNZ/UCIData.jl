@@ -7,7 +7,7 @@ register(DataDep(
   "d923796f741412790174cd23b6912ad9ed346c24d497f276e515944a581d648f",
   post_fetch_method=(path -> begin
     # The ids are appended to each row after `.|`. Replace with comma
-    write(path, replace(read(path, String), ".|", ","))
+    write(path, replace(read(path, String), ".|" => ","))
 
     UCIData.process_dataset(path,
         target_index=30,

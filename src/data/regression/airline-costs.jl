@@ -14,7 +14,8 @@ register(DataDep(
     UCIData.process_dataset(path,
         target_index=6,
         feature_indices=[2:5; 7:11],
-        separator=' ',
+        delim=' ',
+        ignorerepeated=true,
     )
   end),
 ))
