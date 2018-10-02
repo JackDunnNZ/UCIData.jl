@@ -13,8 +13,8 @@ register(DataDep(
         target_index=21,
         feature_indices=3:20,
         id_indices=1:2,
-        separator='\t',
-        skipstart=1,
+        delim='\t',
+        skipto=2,
     )
   end),
 ))

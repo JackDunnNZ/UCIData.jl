@@ -8,13 +8,13 @@ register(DataDep(
   post_fetch_method=(path -> begin
     # There are two columns with numbers in text form
     data = read(path, String)
-    data = replace(data, "two", 2)
-    data = replace(data, "three", 3)
-    data = replace(data, "four", 4)
-    data = replace(data, "five", 5)
-    data = replace(data, "six", 6)
-    data = replace(data, "eight", 8)
-    data = replace(data, "twelve", 12)
+    data = replace(data, "two" => 2)
+    data = replace(data, "three" => 3)
+    data = replace(data, "four" => 4)
+    data = replace(data, "five" => 5)
+    data = replace(data, "six" => 6)
+    data = replace(data, "eight" => 8)
+    data = replace(data, "twelve" => 12)
     write(path, data)
 
     UCIData.process_dataset(path,

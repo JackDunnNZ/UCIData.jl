@@ -9,7 +9,7 @@ register(DataDep(
     UCIData.process_dataset(path,
         target_index=22,
         feature_indices=1:21,
-        separator=' ',
+        delim=' ',
     )
   end),
 ))

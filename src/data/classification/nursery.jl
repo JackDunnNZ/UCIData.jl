@@ -10,6 +10,7 @@ register(DataDep(
         target_index=9,
         feature_indices=1:8,
         categoric_indices=1:8,
+        footerskip=1,
     )
   end),
 ))
