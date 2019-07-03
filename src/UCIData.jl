@@ -5,6 +5,7 @@ import CSV
 using DataDeps
 using DataFrames
 using DelimitedFiles
+using Dates
 import LegacyStrings
 
 
@@ -17,7 +18,8 @@ include("convert.jl")
 function dataset(datasetname)
   dataset_path = @datadep_str datasetname
 
-  df = CSV.File("$dataset_path/data.csv", header=true) |> DataFrame
+  df = CSV.File("$dataset_path/data.csv", header=true,
+                typemap=Dict(Date=>String, DateTime=>String)) |> DataFrame
   for name in names(df)
     if string(name)[1] == 'C'
       categorical!(df, name)
