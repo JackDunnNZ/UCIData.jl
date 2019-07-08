@@ -17,6 +17,7 @@ function process_dataset(
   df = CSV.File(
       path,
       header=false,
+      typemap=Dict(Date=>String, DateTime=>String),
       missingstrings=["", "NA", "?", "*", "#DIV/0!"],
       truestrings=["T", "t", "TRUE", "true", "y", "yes"],
       falsestrings=["F", "f", "FALSE", "false", "n", "no"];
