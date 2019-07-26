@@ -42,7 +42,7 @@ function process_dataset(
   end
   names!(output_df, output_names, makeunique=true)
 
-  output_df[!, :target] = df[!, target_index]
+  output_df.target = df[!, target_index]
 
   output_path = joinpath(dirname(path), "data.csv")
 
