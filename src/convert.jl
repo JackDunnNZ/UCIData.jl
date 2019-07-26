@@ -27,7 +27,7 @@ function process_dataset(
   output_names = Symbol[]
   output_df = DataFrame()
 
-  output_df[:id] = [makeid(df, i, id_indices) for i in 1:size(df, 1)]
+  output_df[!, :id] = [makeid(df, i, id_indices) for i in 1:size(df, 1)]
   push!(output_names, :id)
 
   # Construct output values
@@ -38,11 +38,11 @@ function process_dataset(
     else
       push!(output_names, :N)
     end
-    output_df[size(output_df, 2) + 1] = df[i]
+    output_df = hcat(output_df, df[!, i], makeunique=true)
   end
   names!(output_df, output_names, makeunique=true)
 
-  output_df[:target] = df[target_index]
+  output_df[!, :target] = df[!, target_index]
 
   output_path = joinpath(dirname(path), "data.csv")
 
