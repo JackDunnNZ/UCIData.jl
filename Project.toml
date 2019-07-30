@@ -12,5 +12,5 @@ LegacyStrings = "1b4a561d-cfcb-5daf-8433-43fcf8b4bea3"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [compat]
-DataFrames = "≥0.11"
+DataFrames = "≥0.19"
 CSV = "≥0.5.6"
