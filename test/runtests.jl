@@ -1,6 +1,7 @@
 using UCIData
 using Test
 
+using DataFrames
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
@@ -105,14 +106,13 @@ expected_sizes = Dict(
     ),
     "regression" => Dict(
         "abalone" => (4177, 10, 1, 0),
-        "ailerons" => (7154, 42, 0, 0),
+        "ailerons" => (13750, 42, 0, 0),
         "airfoil-self-noise" => (1503, 7, 0, 0),
         "airline-costs" => (31, 11, 0, 0),
         "auto-mpg" => (398, 9, 1, 6),
         "automobile" => (205, 27, 8, 59),
         "beer-aroma" => (23, 9, 0, 0),
         "blog-feedback" => (52397, 282, 200, 0),
-        "cart-artificial" => (40768, 12, 0, 0),
         "communities-and-crime-2" => (2215, 126, 0, 41406),
         "communities-and-crime" => (1994, 124, 0, 36851),
         "computer-hardware" => (209, 10, 1, 0),
@@ -122,10 +122,8 @@ expected_sizes = Dict(
         "construction-maintenance" => (33, 6, 0, 0),
         "cpu-act" => (8192, 23, 0, 0),
         "cpu-small" => (8192, 14, 0, 0),
-        "diabetes" => (43, 4, 0, 0),
-        "elevators" => (8752, 20, 0, 0),
+        "elevators" => (16599, 20, 0, 0),
         "forest-fires" => (517, 14, 2, 0),
-        "friedman-artificial" => (40768, 12, 0, 0),
         "geographic-origin-music" => (1059, 70, 0, 0),
         "home-mortgage" => (18, 8, 0, 0),
         "housing" => (506, 15, 0, 0),
@@ -156,7 +154,7 @@ expected_sizes = Dict(
   @testset "$dataset" for dataset in UCIData.list_datasets(datasettype)
     df = UCIData.dataset(dataset)
     n_categoric = sum(map(x -> string(x)[1] == 'C', names(df)))
-    n_missing = sum(count(ismissing, df[c]) for c in names(df))
+    n_missing = sum(count(ismissing, c) for c in eachcol(df))
     @test (size(df, 1), size(df, 2), n_categoric, n_missing) ==
           expected_sizes[datasettype][dataset]
   end
