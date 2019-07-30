@@ -2,17 +2,14 @@ using DataDeps
 
 register(DataDep(
   "ailerons",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/DataSets.html",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/ailerons.tgz",
-  "2eb15628e03b0686cb84d199570f5caa9a01755136d87d0002f805dde8464c71",
+  "https://www.openml.org/d/296",
+  "https://www.openml.org/data/get_csv/52060/ailerons.arff",
+  "a866e46f5f5d34cd10583ef366bcc183f04cafda773fa55619d17fd9d70dd68d",
   post_fetch_method=(path -> begin
-    unpack(path)
-    new_path = joinpath(dirname(path), "Ailerons/ailerons.data")
-    mv(new_path, path)
-
     UCIData.process_dataset(path,
         target_index=41,
         feature_indices=1:40,
+        header=true,
     )
   end),
 ))

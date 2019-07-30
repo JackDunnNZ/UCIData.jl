@@ -2,17 +2,14 @@ using DataDeps
 
 register(DataDep(
   "pyrim",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/DataSets.html",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/pyrim.tar.gz",
-  "2e48b2a894a95883321bbeaa48effed1abfcd26a5060f330b288cff4b35e485a",
+  "https://www.openml.org/d/217",
+  "https://www.openml.org/data/get_csv/3654/dataset_2203_pyrim.arff",
+  "a2625a60c6a144ddcf2334df9e2f8cd087f7e95908be3b167e17d3c9587282b3",
   post_fetch_method=(path -> begin
-    unpack(path)
-    new_path = joinpath(dirname(path), "pyrimidines/pyrim.data")
-    mv(new_path, path)
-
     UCIData.process_dataset(path,
         target_index=28,
         feature_indices=1:27,
+        header=true,
     )
   end),
 ))

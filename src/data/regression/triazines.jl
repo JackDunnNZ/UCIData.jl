@@ -2,17 +2,14 @@ using DataDeps
 
 register(DataDep(
   "triazines",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/DataSets.html",
-  "http://www.dcc.fc.up.pt/~ltorgo/Regression/triazines.tar.gz",
-  "281c8390e2f976b307e66a3fc07b59a9d61d1a5b9e4758636b10f77eb583723e",
+  "https://www.openml.org/d/206",
+  "https://www.openml.org/data/get_csv/3643/dataset_2192_triazines.arff",
+  "f6cf2b6604df302c869691b5e41cc2df010b051ac9f414d541f12958dd382ef1",
   post_fetch_method=(path -> begin
-    unpack(path)
-    new_path = joinpath(dirname(path), "triazines/triazines.data")
-    mv(new_path, path)
-
     UCIData.process_dataset(path,
         target_index=61,
         feature_indices=1:60,
+        header=true,
     )
   end),
 ))
