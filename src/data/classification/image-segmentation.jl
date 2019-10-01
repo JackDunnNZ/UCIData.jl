@@ -10,6 +10,7 @@ register(DataDep(
         target_index=1,
         feature_indices=2:20,
         skipto=6,
+        delim=",",
     )
   end),
 ))
