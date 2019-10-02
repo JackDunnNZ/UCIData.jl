@@ -11,6 +11,7 @@ register(DataDep(
         feature_indices=1:16,
         categoric_indices=[1; 4:15],
         skipto=22,
+        delim=",",
     )
   end),
 ))
