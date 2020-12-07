@@ -40,7 +40,7 @@ function process_dataset(
     end
     output_df = hcat(output_df, df[!, i], makeunique=true)
   end
-  names!(output_df, output_names, makeunique=true)
+  rename!(output_df, output_names, makeunique=true)
 
   output_df.target = df[!, target_index]
 
