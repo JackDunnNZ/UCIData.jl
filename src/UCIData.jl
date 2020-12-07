@@ -22,7 +22,7 @@ function dataset(datasetname)
                 typemap=Dict(Date=>String, DateTime=>String)) |> DataFrame
   for name in names(df)
     if string(name)[1] == 'C'
-      categorical!(df, name)
+      transform!(df, name => categorical, renamecols=false)
     end
   end
 
