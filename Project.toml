@@ -14,3 +14,4 @@ LegacyStrings = "1b4a561d-cfcb-5daf-8433-43fcf8b4bea3"
 [compat]
 CSV = "≥0.8"
 DataFrames = "≥0.22"
+LegacyStrings = "0.5"
