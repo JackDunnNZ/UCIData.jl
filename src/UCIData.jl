@@ -2,6 +2,7 @@ module UCIData
 
 
 import CSV
+using CategoricalArrays
 using DataDeps
 using DataFrames
 using DelimitedFiles
