@@ -38,7 +38,7 @@ function process_dataset(
     else
       push!(output_names, :N)
     end
-    output_df = hcat(output_df, df[!, i], makeunique=true)
+    output_df = hcat(output_df, df[!, i:i], makeunique=true)
   end
   rename!(output_df, output_names, makeunique=true)
 
@@ -46,5 +46,5 @@ function process_dataset(
 
   output_path = joinpath(dirname(path), "data.csv")
 
-  CSV.write(output_path, output_df, delim=',', writeheader=true)
+  CSV.write(output_path, output_df, delim=',', header=true)
 end
