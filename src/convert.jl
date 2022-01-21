@@ -14,15 +14,14 @@ function process_dataset(
     categoric_indices=1:0,
     kwargs...
   )
-  df = CSV.File(
-      path,
+  df = CSV.read(path, DataFrame,
       header=false,
       typemap=Dict(Date=>String, DateTime=>String),
-      missingstrings=["", "NA", "?", "*", "#DIV/0!"],
+      missingstring=["", "NA", "?", "*", "#DIV/0!"],
       truestrings=["T", "t", "TRUE", "true", "y", "yes"],
       falsestrings=["F", "f", "FALSE", "false", "n", "no"];
       kwargs...
-  ) |> DataFrame
+  )
 
   output_names = Symbol[]
   output_df = DataFrame()
