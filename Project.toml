@@ -14,6 +14,7 @@ LegacyStrings = "1b4a561d-cfcb-5daf-8433-43fcf8b4bea3"
 
 [compat]
 julia = "1"
+CategoricalArrays = "0.9, 0.10"
 CSV = "0.9, 0.10"
 DataDeps = "0.7"
 DataFrames = "1"
