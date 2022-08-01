@@ -8,7 +8,7 @@ register(DataDep(
   post_fetch_method=(path -> begin
     UCIData.process_dataset(path,
         target_index=18,
-        feature_indices=[2:17; 19:23],
+        feature_indices=[2:17; 19:24],
         id_indices=1,
         skipto=2,
     )
