@@ -7,7 +7,6 @@ using DataDeps
 using DataFrames
 using DelimitedFiles
 using Dates
-import LegacyStrings
 
 
 const DATA_DIR = joinpath(@__DIR__, "data")
