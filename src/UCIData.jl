@@ -39,12 +39,10 @@ function list_datasets(datasettype)
   map(x -> splitext(x)[1], datasets)
 end
 
-function __init__()
-  for datasettype in list_dataset_types()
+for datasettype in list_dataset_types()
     for dataset in list_datasets(datasettype)
       include(joinpath(DATA_DIR, datasettype, "$dataset.jl"))
     end
-  end
 end
 
 

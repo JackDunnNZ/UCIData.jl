@@ -1,7 +1,7 @@
 name = "UCIData"
 uuid = "2dacb708-9dd8-11e9-1001-07df1c52a9e4"
 author = ["Interpretable AI <info@interpretable.ai>"]
-version = "1.0.4"
+version = "1.0.5"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
