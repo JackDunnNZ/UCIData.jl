@@ -7,7 +7,7 @@ using CategoricalArrays
 using DataFrames
 using DelimitedFiles
 using Dates
-using DataDeps: DataDeps, DataDep, @datadep_str
+using DataDeps: DataDeps, DataDep, @datadep_str, unpack
 
 # Our `register` will push a registration function into `REGISTER`.
 # Then at `__init__` time, we will call these to register them
