@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "pen-based-recognition-handwritten-digits",
   "http://archive.ics.uci.edu/ml/datasets/Pen-Based+Recognition+of+Handwritten+Digits",

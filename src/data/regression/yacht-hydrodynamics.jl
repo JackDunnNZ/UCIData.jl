@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "yacht-hydrodynamics",
   "https://archive.ics.uci.edu/ml/datasets/Yacht+Hydrodynamics",

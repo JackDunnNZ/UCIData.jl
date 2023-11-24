@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "immigrant-salaries",
   "http://www.stat.ufl.edu/~winner/data/immwork.txt",

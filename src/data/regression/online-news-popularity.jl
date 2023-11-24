@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "online-news-popularity",
   "https://archive.ics.uci.edu/ml/datasets/Online+News+Popularity",

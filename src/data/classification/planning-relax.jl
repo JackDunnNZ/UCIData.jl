@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "planning-relax",
   "http://archive.ics.uci.edu/ml/datasets/Planning+Relax",

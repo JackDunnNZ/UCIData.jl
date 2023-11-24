@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "parkinsons",
   "http://archive.ics.uci.edu/ml/datasets/Parkinsons",

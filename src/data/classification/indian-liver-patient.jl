@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "indian-liver-patient",
   "http://archive.ics.uci.edu/ml/datasets/ILPD+%28Indian+Liver+Patient+Dataset%29",

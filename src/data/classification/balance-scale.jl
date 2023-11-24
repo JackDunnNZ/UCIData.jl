@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "balance-scale",
   "http://archive.ics.uci.edu/ml/datasets/Balance+Scale",

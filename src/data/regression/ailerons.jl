@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "ailerons",
   "https://www.openml.org/d/296",

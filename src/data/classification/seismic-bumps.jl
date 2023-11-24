@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "seismic-bumps",
   "https://archive.ics.uci.edu/ml/datasets/seismic-bumps",

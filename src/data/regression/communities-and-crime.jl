@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "communities-and-crime",
   "https://archive.ics.uci.edu/ml/datasets/Communities+and+Crime",

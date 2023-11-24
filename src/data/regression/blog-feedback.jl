@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "blog-feedback",
   "https://archive.ics.uci.edu/ml/datasets/BlogFeedback",

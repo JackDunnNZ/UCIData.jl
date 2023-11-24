@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "statlog-project-landsat-satellite",
   "http://archive.ics.uci.edu/ml/datasets/Statlog+Project",

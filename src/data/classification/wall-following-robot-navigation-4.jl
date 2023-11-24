@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "wall-following-robot-navigation-4",
   "http://archive.ics.uci.edu/ml/datasets/Wall-Following+Robot+Navigation+Data",

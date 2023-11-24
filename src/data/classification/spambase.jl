@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "spambase",
   "http://archive.ics.uci.edu/ml/datasets/Spambase",

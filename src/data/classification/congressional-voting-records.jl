@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "congressional-voting-records",
   "http://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records",

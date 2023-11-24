@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "ionosphere",
   "http://archive.ics.uci.edu/ml/datasets/Ionosphere",

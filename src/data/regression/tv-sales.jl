@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "tv-sales",
   "http://www.stat.ufl.edu/~winner/data/tvsales.txt",

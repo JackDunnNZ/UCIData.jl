@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "cpu-act",
   "https://www.openml.org/d/197",

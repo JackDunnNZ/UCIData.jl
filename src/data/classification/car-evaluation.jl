@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "car-evaluation",
   "http://archive.ics.uci.edu/ml/datasets/Car+Evaluation",

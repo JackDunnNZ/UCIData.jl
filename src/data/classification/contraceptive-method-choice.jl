@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "contraceptive-method-choice",
   "http://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice",

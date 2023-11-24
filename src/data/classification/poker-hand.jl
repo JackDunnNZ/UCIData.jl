@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "poker-hand",
   "http://archive.ics.uci.edu/ml/datasets/Poker+Hand",

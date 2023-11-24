@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "ozone-level-detection-one",
   "https://archive.ics.uci.edu/ml/datasets/Ozone+Level+Detection",

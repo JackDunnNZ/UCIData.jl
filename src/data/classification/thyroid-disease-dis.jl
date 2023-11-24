@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "thyroid-disease-dis",
   "http://archive.ics.uci.edu/ml/datasets/Thyroid+Disease",

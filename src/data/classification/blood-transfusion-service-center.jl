@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "blood-transfusion-service-center",
   "http://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center",

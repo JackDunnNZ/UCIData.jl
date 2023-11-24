@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "qsar-biodegradation",
   "http://archive.ics.uci.edu/ml/datasets/QSAR+biodegradation",

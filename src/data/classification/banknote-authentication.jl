@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "banknote-authentication",
   "http://archive.ics.uci.edu/ml/datasets/banknote+authentication",

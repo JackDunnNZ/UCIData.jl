@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "optical-recognition-handwritten-digits",
   "http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits",

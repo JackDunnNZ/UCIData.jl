@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "spectf-heart",
   "http://archive.ics.uci.edu/ml/datasets/SPECTF+Heart",

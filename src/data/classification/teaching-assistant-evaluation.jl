@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "teaching-assistant-evaluation",
   "http://archive.ics.uci.edu/ml/datasets/Teaching+Assistant+Evaluation",

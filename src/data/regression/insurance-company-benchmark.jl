@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "insurance-company-benchmark",
   "https://archive.ics.uci.edu/ml/datasets/Insurance+Company+Benchmark+%28COIL+2000%29",

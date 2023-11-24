@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "statlog-project-german-credit",
   "http://archive.ics.uci.edu/ml/datasets/Statlog+Project",

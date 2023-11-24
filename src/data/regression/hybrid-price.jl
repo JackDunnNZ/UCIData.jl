@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "hybrid-price",
   "http://www.stat.ufl.edu/~winner/data/hybrid_reg.txt",

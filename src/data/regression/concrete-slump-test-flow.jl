@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "concrete-slump-test-flow",
   "https://archive.ics.uci.edu/ml/datasets/Concrete+Slump+Test",

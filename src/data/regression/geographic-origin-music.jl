@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "geographic-origin-music",
   "https://archive.ics.uci.edu/ml/datasets/Geographical+Original+of+Music",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "chess-king-rook-vs-king-pawn",
   "http://archive.ics.uci.edu/ml/datasets/Chess+%28King-Rook+vs.+King-Pawn%29",

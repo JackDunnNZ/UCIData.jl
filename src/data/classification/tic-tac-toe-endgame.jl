@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "tic-tac-toe-endgame",
   "http://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame",

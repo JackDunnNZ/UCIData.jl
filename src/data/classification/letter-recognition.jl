@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "letter-recognition",
   "http://archive.ics.uci.edu/ml/datasets/Letter+Recognition",

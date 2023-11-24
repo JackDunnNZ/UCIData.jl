@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "flags",
   "http://archive.ics.uci.edu/ml/datasets/Flags",

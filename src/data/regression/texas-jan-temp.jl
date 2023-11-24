@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "texas-jan-temp",
   "http://www.stat.ufl.edu/~winner/data/texas1.txt",

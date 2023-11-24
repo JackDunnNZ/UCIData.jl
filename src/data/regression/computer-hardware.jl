@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "computer-hardware",
   "https://archive.ics.uci.edu/ml/datasets/Computer+Hardware",
