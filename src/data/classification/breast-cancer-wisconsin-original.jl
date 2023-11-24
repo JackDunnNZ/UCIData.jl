@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "breast-cancer-wisconsin-original",
   "http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29",

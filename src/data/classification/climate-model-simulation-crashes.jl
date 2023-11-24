@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "climate-model-simulation-crashes",
   "http://archive.ics.uci.edu/ml/datasets/Climate+Model+Simulation+Crashes",

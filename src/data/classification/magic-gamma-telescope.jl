@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "magic-gamma-telescope",
   "http://archive.ics.uci.edu/ml/datasets/MAGIC+Gamma+Telescope",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "japan-emmigration",
   "http://www.stat.ufl.edu/~winner/data/japanemg.txt",

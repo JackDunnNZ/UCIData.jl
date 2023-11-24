@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "lpga-2008",
   "http://www.stat.ufl.edu/~winner/data/lpga2008.txt",

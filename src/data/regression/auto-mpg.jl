@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "auto-mpg",
   "https://archive.ics.uci.edu/ml/datasets/Auto+MPG",

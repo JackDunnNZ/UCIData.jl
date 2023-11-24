@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "ecoli",
   "http://archive.ics.uci.edu/ml/datasets/Ecoli",

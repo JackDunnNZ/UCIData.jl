@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "airfoil-self-noise",
   "https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise",

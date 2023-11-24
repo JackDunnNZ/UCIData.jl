@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "elevators",
   "https://www.openml.org/d/216",

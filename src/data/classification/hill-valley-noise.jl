@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "hill-valley-noise",
   "http://archive.ics.uci.edu/ml/datasets/Hill-Valley",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "connectionist-bench-sonar",
   "http://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+%28Sonar%2C+Mines+vs.+Rocks%29",

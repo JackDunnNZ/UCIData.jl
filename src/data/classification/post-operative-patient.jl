@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "post-operative-patient",
   "http://archive.ics.uci.edu/ml/datasets/Post-Operative+Patient",

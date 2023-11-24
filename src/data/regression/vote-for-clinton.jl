@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "vote-for-clinton",
   "http://www.stat.ufl.edu/~winner/data/clinton1.txt",

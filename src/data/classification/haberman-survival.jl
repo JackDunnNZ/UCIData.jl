@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "haberman-survival",
   "http://archive.ics.uci.edu/ml/datasets/Haberman%27s+Survival",

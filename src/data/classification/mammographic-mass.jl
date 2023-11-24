@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "mammographic-mass",
   "https://archive.ics.uci.edu/ml/datasets/Mammographic+Mass",

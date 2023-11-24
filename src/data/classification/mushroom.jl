@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "mushroom",
   "http://archive.ics.uci.edu/ml/datasets/Mushroom",

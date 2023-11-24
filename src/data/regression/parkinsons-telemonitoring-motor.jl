@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "parkinsons-telemonitoring-motor",
   "https://archive.ics.uci.edu/ml/datasets/Parkinsons+Telemonitoring",

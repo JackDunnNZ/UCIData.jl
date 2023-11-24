@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "construction-maintenance",
   "http://www.stat.ufl.edu/~winner/data/const_maint.txt",

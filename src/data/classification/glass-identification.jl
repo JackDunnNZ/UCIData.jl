@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "glass-identification",
   "http://archive.ics.uci.edu/ml/datasets/Glass+Identification",

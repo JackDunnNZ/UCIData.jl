@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "cnae-9",
   "http://archive.ics.uci.edu/ml/datasets/CNAE-9",

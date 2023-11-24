@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "kin8nm",
   "https://www.openml.org/d/189",

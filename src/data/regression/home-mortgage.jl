@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "home-mortgage",
   "http://www.stat.ufl.edu/~winner/data/myield.txt",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "libras-movement",
   "http://archive.ics.uci.edu/ml/datasets/Libras+Movement",

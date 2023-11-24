@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "triazines",
   "https://www.openml.org/d/206",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "pyrim",
   "https://www.openml.org/d/217",

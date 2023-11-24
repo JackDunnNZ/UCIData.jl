@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "dermatology",
   "http://archive.ics.uci.edu/ml/datasets/Dermatology",

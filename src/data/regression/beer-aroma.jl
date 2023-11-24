@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "beer-aroma",
   "http://www.stat.ufl.edu/~winner/data/aroma_beer.txt",

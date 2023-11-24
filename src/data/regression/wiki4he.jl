@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "wiki4he",
   "https://archive.ics.uci.edu/ml/datasets/wiki4HE",

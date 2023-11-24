@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "soybean-small",
   "http://archive.ics.uci.edu/ml/datasets/Soybean+%28Large%29",

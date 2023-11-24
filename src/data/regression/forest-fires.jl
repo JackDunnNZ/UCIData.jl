@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "forest-fires",
   "https://archive.ics.uci.edu/ml/datasets/Forest+Fires",

@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "echocardiogram",
   "http://archive.ics.uci.edu/ml/datasets/Echocardiogram",

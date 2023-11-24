@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "image-segmentation",
   "http://archive.ics.uci.edu/ml/datasets/Image+Segmentation",

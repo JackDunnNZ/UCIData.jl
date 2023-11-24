@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "shuttle-landing-control",
   "http://archive.ics.uci.edu/ml/datasets/Shuttle+Landing+Control",

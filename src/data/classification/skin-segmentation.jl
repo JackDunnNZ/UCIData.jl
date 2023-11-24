@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "skin-segmentation",
   "http://archive.ics.uci.edu/ml/datasets/Skin+Segmentation",

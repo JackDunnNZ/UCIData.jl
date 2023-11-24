@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "abalone",
   "https://archive.ics.uci.edu/ml/datasets/Abalone",

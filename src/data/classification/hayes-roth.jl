@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "hayes-roth",
   "http://archive.ics.uci.edu/ml/datasets/Hayes-Roth",

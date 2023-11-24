@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "airline-costs",
   "http://www.stat.ufl.edu/~winner/data/airline_costs.txt",

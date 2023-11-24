@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "cylinder-bands",
   "http://archive.ics.uci.edu/ml/datasets/Cylinder+Bands",

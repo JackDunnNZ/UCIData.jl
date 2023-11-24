@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "acute-inflammations-2",
   "http://archive.ics.uci.edu/ml/datasets/Acute+Inflammations",

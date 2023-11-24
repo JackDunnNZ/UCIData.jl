@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "housing",
   "https://archive.ics.uci.edu/ml/datasets/Housing",

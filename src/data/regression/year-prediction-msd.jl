@@ -1,5 +1,3 @@
-using DataDeps
-
 register(DataDep(
   "year-prediction-msd",
   "http://archive.ics.uci.edu/ml/datasets/YearPredictionMSD",
