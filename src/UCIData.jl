@@ -3,11 +3,21 @@ module UCIData
 
 import CSV
 using CategoricalArrays
-using DataDeps
+
 using DataFrames
 using DelimitedFiles
 using Dates
+using DataDeps: DataDeps
 
+# Our `register` will push a registration function into `REGISTER`.
+# Then at `__init__` time, we will call these to register them
+# with DataDeps. This allows us to call `register` at precompilation
+# time, so we can include separate files each with a `register` call,
+# but do the registration at runtime, as DataDeps requires.
+const REGISTRY = []
+function register(args...; kwargs...)
+    push!(REGISTRY, () -> DataDeps.register(args...; kwargs...))
+end
 
 const DATA_DIR = joinpath(@__DIR__, "data")
 
@@ -42,6 +52,12 @@ end
 for datasettype in list_dataset_types()
     for dataset in list_datasets(datasettype)
       include(joinpath(DATA_DIR, datasettype, "$dataset.jl"))
+    end
+end
+
+function __init__()
+    for f in REGISTRY
+        f()
     end
 end
 
